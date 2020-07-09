@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>GengLee&#39;s Blog</title>
+  <icon>http://yoursite.com/icon.png</icon>
+  <subtitle>😏 做個迷人的混蛋 桀驁而不失鋒範</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2020-07-09T08:15:34.042Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Geng Lee</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Calculation of KaKs Value</title>
+    <link href="http://yoursite.com/posts/539d6d7a/"/>
+    <id>http://yoursite.com/posts/539d6d7a/</id>
+    <published>2020-06-25T07:18:07.000Z</published>
+    <updated>2020-07-09T08:15:34.042Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;the-concept-and-meaning-of-kaks&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#the-concept-and-meaning-of-kaks&quot;&gt;&lt;/a&gt; The concept and meaning of Ka,Ks&lt;/h1&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Ks（synonymous substitutions）:A base mutation in a codon does not change the amino acid encoded by the codon.&lt;br /&gt;
+Ka（nonsynonymous substitutions）:A base mutation in a codon changes the amino acid encoded by that codon.&lt;/p&gt;
+&lt;/div&gt;
+&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Genome" scheme="http://yoursite.com/categories/Genome/"/>
+    
+    
+      <category term="Python" scheme="http://yoursite.com/tags/Python/"/>
+    
+      <category term="KaKs" scheme="http://yoursite.com/tags/KaKs/"/>
+    
+      <category term="shell" scheme="http://yoursite.com/tags/shell/"/>
+    
+      <category term="perl" scheme="http://yoursite.com/tags/perl/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Analysis of single-cell ATAC-seq data using SnapATAC software (2)：10x Adult Mouse Brain</title>
+    <link href="http://yoursite.com/posts/34331839/"/>
+    <id>http://yoursite.com/posts/34331839/</id>
+    <published>2020-06-20T01:05:25.000Z</published>
+    <updated>2020-07-08T16:13:26.173Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;introduction&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#introduction&quot;&gt;&lt;/a&gt; Introduction&lt;/h1&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;10x-adult-mouse-brain&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#10x-adult-mouse-brain&quot;&gt;&lt;/a&gt; 10X Adult Mouse Brain&lt;/h2&gt;
+&lt;p&gt;In this example, we will be analyzing a dataset of 5K cells from the adult mouse brain available from 10X genomics. All the data used in this analysis can be downloaded from &lt;a href=&quot;http://renlab.sdsc.edu/r3fang/share/github/Mouse_Brain_10X/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="scRNA" scheme="http://yoursite.com/categories/scRNA/"/>
+    
+    
+      <category term="R" scheme="http://yoursite.com/tags/R/"/>
+    
+      <category term="scRNA" scheme="http://yoursite.com/tags/scRNA/"/>
+    
+      <category term="ATAC" scheme="http://yoursite.com/tags/ATAC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python 实战-根据已知蛋白名称从基因组提取蛋白序列</title>
+    <link href="http://yoursite.com/posts/555c5d02/"/>
+    <id>http://yoursite.com/posts/555c5d02/</id>
+    <published>2020-06-18T15:01:25.000Z</published>
+    <updated>2020-07-08T14:12:00.634Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;实战目的&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#实战目的&quot;&gt;&lt;/a&gt; 实战目的&lt;/h2&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Pkinase_maize_hmm.txt 是一个含有所需要提取蛋白名称（target name）的 txt 文件，Zea_mays.B73_RefGen_v4.pep.all.fa 文件是一个含有玉米基因组所有蛋白序列信息的 fa 文件，目的就是从 fa 文件提取我们所需蛋白名称的序列。&lt;/p&gt;
+&lt;/div&gt;
+&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Data_processing" scheme="http://yoursite.com/categories/Data-processing/"/>
+    
+    
+      <category term="Python" scheme="http://yoursite.com/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用SnapATAC软件分析单细胞ATAC-seq数据（一）：SnapATAC简介与安装</title>
+    <link href="http://yoursite.com/posts/ac829b5/"/>
+    <id>http://yoursite.com/posts/ac829b5/</id>
+    <published>2020-06-17T04:07:43.000Z</published>
+    <updated>2020-07-09T06:49:11.820Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;snapatac简介&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#snapatac简介&quot;&gt;&lt;/a&gt; SnapATAC简介&lt;/h2&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;&lt;strong&gt;SnapATAC&lt;/strong&gt;(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。&lt;/p&gt;
+&lt;/div&gt;
+&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="scRNA" scheme="http://yoursite.com/categories/scRNA/"/>
+    
+    
+      <category term="Python" scheme="http://yoursite.com/tags/Python/"/>
+    
+      <category term="R" scheme="http://yoursite.com/tags/R/"/>
+    
+      <category term="scRNA" scheme="http://yoursite.com/tags/scRNA/"/>
+    
+      <category term="ATAC" scheme="http://yoursite.com/tags/ATAC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hi Guys</title>
+    <link href="http://yoursite.com/posts/4a17b156/"/>
+    <id>http://yoursite.com/posts/4a17b156/</id>
+    <published>2020-06-16T14:12:55.826Z</published>
+    <updated>2020-07-09T08:15:49.390Z</updated>
+    
+    <summary type="html">
+    
+      &lt;center&gt;
+&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;
+&lt;/center&gt;
+    
+    </summary>
+    
+    
+      <category term="uncategorized" scheme="http://yoursite.com/categories/uncategorized/"/>
+    
+    
+  </entry>
+  
+</feed>

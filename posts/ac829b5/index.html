@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/net2.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/net1.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=sans-serif:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"8.0.0-rc.3","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="SnapATAC简介 SnapATAC(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用SnapATAC软件分析单细胞ATAC-seq数据（一）：SnapATAC简介与安装">
+<meta property="og:url" content="http://yoursite.com/posts/ac829b5/index.html">
+<meta property="og:site_name" content="GengLee&#39;s Blog">
+<meta property="og:description" content="SnapATAC简介 SnapATAC(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://camo.githubusercontent.com/fe8c50206e0c567a1691f11ad3e9ea5482a0f9aa/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f322e706e67">
+<meta property="og:image" content="https://camo.githubusercontent.com/65e69e4036b9cbcd7ced5091a7f8ce22dd11a29b/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f312e706e67">
+<meta property="article:published_time" content="2020-06-17T04:07:43.000Z">
+<meta property="article:modified_time" content="2020-07-09T06:49:11.820Z">
+<meta property="article:author" content="Geng Lee">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="R">
+<meta property="article:tag" content="scRNA">
+<meta property="article:tag" content="ATAC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/fe8c50206e0c567a1691f11ad3e9ea5482a0f9aa/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f322e706e67">
+
+<link rel="canonical" href="http://yoursite.com/posts/ac829b5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>使用SnapATAC软件分析单细胞ATAC-seq数据（一）：SnapATAC简介与安装 | GengLee's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="GengLee's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">GengLee's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">😏 做個迷人的混蛋 桀驁而不失鋒範</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/geng-lee" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/ac829b5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Geng Lee">
+      <meta itemprop="description" content="To be a better me">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GengLee's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用SnapATAC软件分析单细胞ATAC-seq数据（一）：SnapATAC简介与安装
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-17 12:07:43" itemprop="dateCreated datePublished" datetime="2020-06-17T12:07:43+08:00">2020-06-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-07-09 14:49:11" itemprop="dateModified" datetime="2020-07-09T14:49:11+08:00">2020-07-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scRNA/" itemprop="url" rel="index"><span itemprop="name">scRNA</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>12 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="snapatac简介"><a class="markdownIt-Anchor" href="#snapatac简介"></a> SnapATAC简介</h2>
+<div class="note info no-icon"><p><strong>SnapATAC</strong>(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。</p>
+</div>
+<br>
+<a id="more"></a>
+<h2 id="snapatac软件安装"><a class="markdownIt-Anchor" href="#snapatac软件安装"></a> SnapATAC软件安装</h2>
+<h3 id="requirements"><a class="markdownIt-Anchor" href="#requirements"></a> Requirements</h3>
+<ul>
+<li>Linux/Unix</li>
+<li>Python (&gt;= 2.7 &amp; &lt; 3.0) (SnapTools) (highly recommanded for 2.7);</li>
+<li>R (&gt;= 3.4.0 &amp; &lt; 3.6.0) (SnapATAC) (3.6 does not work for rhdf5 package);<br></li>
+</ul>
+<h3 id="pre-print"><a class="markdownIt-Anchor" href="#pre-print"></a> Pre-print</h3>
+<p>Rongxin Fang, Sebastian Preissl, Xiaomeng Hou, Jacinta Lucero, Xinxin Wang, Amir Motamedi, Andrew K. Shiau, Eran A. Mukamel, Yanxiao Zhang, M. Margarita Behrens, Joseph Ecker, Bing Ren. <strong>Fast and Accurate Clustering of Single Cell Epigenomes Reveals Cis-Regulatory Elements in Rare Cell Types.</strong> bioRxiv 615179; doi: <a href="https://doi.org/10.1101/615179" target="_blank" rel="noopener">https://doi.org/10.1101/615179</a><br></p>
+<h3 id="installation"><a class="markdownIt-Anchor" href="#installation"></a> Installation</h3>
+<p>SnapATAC软件主要由以下两个组件组成：<code>Snaptools</code>和<code>SnapATAC</code>.</p>
+<ul>
+<li>
+<mark class="label default"><font color=c52950>SnapTools</font></mark>一个用于预处理和处理snap格式文件的python模块。
+</li>
+<li>
+<mark class="label default"><font color=c52950>SnapATAC</font></mark>一个用于数据聚类、注释、motif发现和下游分析的R包。
+</li>
+</ul>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># Install snaptools from PyPI. </span></span><br><span class="line"><span class="meta"># NOTE: Please use python 2.7 if possible.</span></span><br><span class="line"><span class="meta"># 使用pip安装snaptools模块</span></span><br><span class="line">pip install snaptools</span><br><span class="line"></span><br><span class="line"><span class="meta"># Install SnapATAC R pakcage (development version).</span></span><br><span class="line"><span class="meta"># 安装一些依赖R包</span></span><br><span class="line">install.packages(c(<span class="string">'raster'</span>,<span class="string">'bigmemory'</span>,<span class="string">'doSNOW'</span>,<span class="string">'plot3D'</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta"># 使用devtools安装SnapATAC包</span></span><br><span class="line">library(devtools)</span><br><span class="line">install_github(<span class="string">"r3fang/SnapATAC"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="snapatac常见问题汇总"><a class="markdownIt-Anchor" href="#snapatac常见问题汇总"></a> SnapATAC常见问题汇总</h2>
+<h3 id="1what-is-a-snap-file"><a class="markdownIt-Anchor" href="#1what-is-a-snap-file"></a> 1）What is a snap file?</h3>
+<p>snap (Single-Nucleus Accessibility Profiles)格式文件是一个层级结构的hdf5文件，它可以用来存储single nucleus ATAC-seq数据集。该文件（version 4）主要由以下几个部分组成：header (HD), cell-by-bin accessibility matrix (AM), cell-by-peak matrix (PM), cell-by-gene matrix (GM), barcode (BD) and fragment (FM).</p>
+<ul>
+<li>HD session: 包含snap文件的版本、创建日期、比对信息和参考基因组信息。</li>
+<li>BD session: 包含所有unique细胞的barcodes和相应的meta data信息。</li>
+<li>AM session: 包含不同分辨率（bin size）下的cell-by-bin数据矩阵。</li>
+<li>PM session: 包含cell-by-peak的计数矩阵和cell-by-gene的计数矩阵。</li>
+<li>FM session: 包含每个细胞中可用的所有frangments片段信息。</li>
+</ul>
+<h3 id="2how-to-create-a-snap-file-from-fastq-file"><a class="markdownIt-Anchor" href="#2how-to-create-a-snap-file-from-fastq-file"></a> 2）How to create a snap file from fastq file?</h3>
+<p>Step 1. Barcode demultiplexing.</p>
+<p>首先，我们将barcode信息以&quot;@&quot; + “barcode” + “:” + &quot;read_name&quot;的格式添加到每条read的开头，用以拆分FASTQ文件。<br />
+下面是一个用于拆分fastq文件的示例，我们可以通过awk或python脚本轻松实现。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 下载示例数据</span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//renlab.sdsc.edu/r3fang/share/Fang_2019/MOs_snATAC/fastq/CEMBA180306_2B.demultiplexed.R1.fastq.gz</span></span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//renlab.sdsc.edu/r3fang/share/Fang_2019/MOs_snATAC/fastq/CEMBA180306_2B.demultiplexed.R2.fastq.gz</span></span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//renlab.sdsc.edu/r3fang/share/Fang_2019/MOs_snATAC/peaks/all_peak.bed</span></span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//renlab.sdsc.edu/r3fang/share/Fang_2019/MOs_snATAC/mm10.blacklist.bed.gz</span></span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//renlab.sdsc.edu/r3fang/share/Fang_2019/MOs_snATAC/genes/gencode.vM16.gene.bed</span></span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//hgdownload.cse.ucsc.edu/goldenPath/mm10/bigZips/mm10.chrom.sizes</span></span><br><span class="line"><span class="selector-tag">wget</span> <span class="selector-tag">http</span>:<span class="comment">//renlab.sdsc.edu/r3fang/share/Fang_2019/MOs_snATAC/genome/mm10.fa</span></span><br><span class="line"></span><br><span class="line"># 查看<span class="selector-tag">fastq</span>文件</span><br><span class="line"><span class="selector-tag">zcat</span> <span class="selector-tag">CEMBA180306_2B</span><span class="selector-class">.demultiplexed</span><span class="selector-class">.R1</span><span class="selector-class">.fastq</span><span class="selector-class">.gz</span> | <span class="selector-tag">head</span> </span><br><span class="line">@<span class="selector-tag">AGACGGAGACGAATCTAGGCTGGTTGCCTTAC</span><span class="selector-pseudo">:7001113</span><span class="selector-pseudo">:920</span><span class="selector-pseudo">:HJ55CBCX2</span><span class="selector-pseudo">:1</span><span class="selector-pseudo">:1108</span><span class="selector-pseudo">:1121</span><span class="selector-pseudo">:1892</span> <span class="selector-tag">1</span><span class="selector-pseudo">:N</span><span class="selector-pseudo">:0</span><span class="selector-pseudo">:0</span></span><br><span class="line"><span class="selector-tag">ATCCTGGCATGAAAGGATTTTTTTTTTAGAAAATGAAATATATTTTAAAG</span></span><br><span class="line">+</span><br><span class="line"><span class="selector-tag">DDDDDIIIIHIIGHHHIIIHIIIIIIHHIIIIIIIIIIIIIIIIIIIIII</span></span><br></pre></td></tr></table></figure>
+<p>Step 2. Index reference genome (snaptools).</p>
+<p>接下来，我们将对参考基因组构建索引用于后续的比对分析，这里我们展示了如何使用BWA来构建参考基因组的索引。用户可以通过<mark class="label default"><font color=c52950> --aligner</font></mark>参数指定要使用的比对软件，目前snaptools可以支持bwa, bowtie2和minimap2比对软件。同时，我们还需要指定比对软件所在文件夹的路径，例如，如果bwa安装在/opt/biotools/bwa/bin/bwa下，我们需要指定–path-to-aligner=/opt/biotools/bwa/bin/</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看bwa软件所在的路径</span></span><br><span class="line">which bwa</span><br><span class="line">/opt/biotools/bwa/bin/bwa </span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用snaptools构建参考基因组索引</span></span><br><span class="line">snaptools index-genome  \</span><br><span class="line">    <span class="attribute">--input-fasta</span>=mm10.fa  \</span><br><span class="line">    <span class="attribute">--output-prefix</span>=mm10  \</span><br><span class="line">    <span class="attribute">--aligner</span>=bwa  \</span><br><span class="line">    <span class="attribute">--path-to-aligner</span>=/opt/biotools/bwa/bin/  \</span><br><span class="line">    <span class="attribute">--num-threads</span>=5</span><br></pre></td></tr></table></figure>
+<p>Step 3. Alignment (snaptools).</p>
+<p>构建好参考基因组索引后，我们使用snaptools将拆分后的FASTQ reads序列比对到相应的参考基因组上。比对后，将比对好的bam文件按reads名称进行排序。我们还可以通过设置–num-threads参数指定多个CPU加快比对的速度。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">snaptools align-paired-end  \</span><br><span class="line">    <span class="attribute">--input-reference</span>=mm10.fa  \</span><br><span class="line">    <span class="attribute">--input-fastq1</span>=CEMBA180306_2B.demultiplexed.R1.fastq.gz  \</span><br><span class="line">    <span class="attribute">--input-fastq2</span>=CEMBA180306_2B.demultiplexed.R2.fastq.gz  \</span><br><span class="line">    <span class="attribute">--output-bam</span>=CEMBA180306_2B.bam  \</span><br><span class="line">    <span class="attribute">--aligner</span>=bwa  \</span><br><span class="line">    <span class="attribute">--path-to-aligner</span>=/opt/biotools/bwa/bin/  \</span><br><span class="line">    <span class="attribute">--read-fastq-command</span>=zcat  \</span><br><span class="line">    <span class="attribute">--min-cov</span>=0  \</span><br><span class="line">    <span class="attribute">--num-threads</span>=5  \</span><br><span class="line">    <span class="attribute">--if-sort</span>=<span class="literal">True</span>  \</span><br><span class="line">    <span class="attribute">--tmp-folder</span>=./  \</span><br><span class="line">    <span class="attribute">--overwrite</span>=<span class="literal">TRUE</span></span><br></pre></td></tr></table></figure>
+<p>Step 4. Pre-processing (snaptools).</p>
+<p>比对完之后，我们将比对好的双端reads转换为fragments片段，并查看每个 fragment片段的以下属性:<br><br />
+1)比对质量评分MAPQ;<br><br />
+2)比对上的reads两端是否按比对的flag值正确配对;<br><br />
+3)fragments片段的长度：<br><br />
+我们根据以下条件进行过滤筛选，只保留满足条件的fragments片段;<br><br />
+1)两端正确配对的fragments片段；<br><br />
+2)MAPQ值大于30的fragments片段(-min-mapq);<br><br />
+3)长度小于1000bp的fragments片段 (-max-flen)。<br></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 提取参考基因染色体长度信息</span></span><br><span class="line">fetchChromSizes mm10.fa &gt; mm10.chrom.sizes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用snaptools进行数据预处理，生成snap格式文件</span></span><br><span class="line">snaptools snap-pre  \</span><br><span class="line">    <span class="attribute">--input-file</span>=CEMBA180306_2B.bam  \</span><br><span class="line">    <span class="attribute">--output-snap</span>=CEMBA180306_2B.snap  \</span><br><span class="line">    <span class="attribute">--genome-name</span>=mm10  \</span><br><span class="line">    <span class="attribute">--genome-size</span>=mm10.chrom.sizes  \</span><br><span class="line">    <span class="attribute">--min-mapq</span>=30  \</span><br><span class="line">    <span class="attribute">--min-flen</span>=0  \</span><br><span class="line">    <span class="attribute">--max-flen</span>=1000  \</span><br><span class="line">    <span class="attribute">--keep-chrm</span>=<span class="literal">TRUE</span>  \</span><br><span class="line">    <span class="attribute">--keep-single</span>=<span class="literal">FALSE</span>  \</span><br><span class="line">    <span class="attribute">--keep-secondary</span>=<span class="literal">FALSE</span>  \</span><br><span class="line">    <span class="attribute">--overwrite</span>=<span class="literal">True</span>  \</span><br><span class="line">    <span class="attribute">--min-cov</span>=100  \</span><br><span class="line">    <span class="attribute">--verbose</span>=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>Step 5. Cell-by-bin matrix (snaptools).</p>
+<p>最后，我们使用snap文件创建不同分辨率下的cell-by-bin矩阵文件。在下面的示例中，我们分别创建了1,000、5,000和10,000 bin size下的三个cell-by-bin矩阵，并将所有的矩阵都存储在cemba180306_2B.snap文件中。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用snaptools创建cell-by-bin矩阵</span></span><br><span class="line">snaptools snap-<span class="built_in">add</span>-bmat    \</span><br><span class="line">    <span class="comment">--snap-file=CEMBA180306_2B.snap \</span></span><br><span class="line">    <span class="comment">--bin-size-list 1000 5000 10000 \</span></span><br><span class="line">    <span class="comment">--verbose=True</span></span><br></pre></td></tr></table></figure>
+<h3 id="3how-to-create-snap-file-from-10x-dataset"><a class="markdownIt-Anchor" href="#3how-to-create-snap-file-from-10x-dataset"></a> 3）How to create snap file from 10X dataset?</h3>
+<p>Case 1<br><br />
+<img src="https://camo.githubusercontent.com/fe8c50206e0c567a1691f11ad3e9ea5482a0f9aa/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f322e706e67" alt="" /><br />
+1）首先，运行cellranger-atac mkfastq生成拆库后的fastq文件；<br><br />
+2）接下来，对于每个测序文库，识别相应的测序文件，其中R1和R3是测序的<br>reads，I1是16bp i5 (10x Barcode), R2是i7 (sample index)。<br><br />
+3）最后，使用snaptools提供的dex-fastq子程序，将10X barcode信息添加到reads的名称中。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">snaptools dex-fastq \</span><br><span class="line">    --input-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R1_001</span>.</span></span>fastq.gz \</span><br><span class="line">    --output-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R1_001</span>.</span></span>dex.fastq.gz \ </span><br><span class="line">    --index-fastq-<span class="built_in">list</span> <span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R2_001</span>.</span></span>fastq.gz</span><br><span class="line"></span><br><span class="line">snaptools dex-fastq \</span><br><span class="line">    --input-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R3_001</span>.</span></span>fastq.gz \</span><br><span class="line">    --output-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R3_001</span>.</span></span>dex.fastq.gz \ </span><br><span class="line">    --index-fastq-<span class="built_in">list</span> <span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R2_001</span>.</span></span>fastq.gz</span><br><span class="line"></span><br><span class="line">snaptools dex-fastq \</span><br><span class="line">    --input-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R1_001</span>.</span></span>fastq.gz \</span><br><span class="line">    --output-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R1_001</span>.</span></span>dex.fastq.gz \ </span><br><span class="line">    --index-fastq-<span class="built_in">list</span> <span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R2_001</span>.</span></span>fastq.gz</span><br><span class="line"></span><br><span class="line">snaptools dex-fastq \</span><br><span class="line">    --input-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R3_001</span>.</span></span>fastq.gz \</span><br><span class="line">    --output-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R3_001</span>.</span></span>dex.fastq.gz \ </span><br><span class="line">    --index-fastq-<span class="built_in">list</span> <span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R2_001</span>.</span></span>fastq.gz</span><br><span class="line"></span><br><span class="line"># combine these two library</span><br><span class="line">cat <span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R1_001</span>.</span></span>fastq.gz <span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R1_001</span>.</span></span>fastq.gz &gt; <span class="module-access"><span class="module"><span class="identifier">Library1_L001_R1_001</span>.</span></span>fastq.gz</span><br><span class="line"></span><br><span class="line">cat <span class="module-access"><span class="module"><span class="identifier">Library1_1_L001_R3_001</span>.</span></span>fastq.gz <span class="module-access"><span class="module"><span class="identifier">Library1_2_L001_R3_001</span>.</span></span>fastq.gz &gt; <span class="module-access"><span class="module"><span class="identifier">Library1_L001_R3_001</span>.</span></span>fastq.gz</span><br></pre></td></tr></table></figure>
+<p>Case 2 <br><br />
+<img src="https://camo.githubusercontent.com/65e69e4036b9cbcd7ced5091a7f8ce22dd11a29b/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f312e706e67" alt="" /><br />
+在本示例中，我们有两个10x的测序文库(每个文库都通过单独的Chromium chip channel进行处理)。请注意，在运行完<mark class="label default"><font color=c52950>cellranger-atac mkfastq</font></mark>拆分数据之后，我们对每个文库进行单独的<mark class="label default"><font color=c52950>cellranger-atac count</font></mark>处理。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">snaptools dex-fastq \</span><br><span class="line">    --input-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_S1_L001_R1_001</span>.</span></span>fastq.gz \</span><br><span class="line">    --output-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_S1_L001_R1_001</span>.</span></span>dex.fastq.gz \ </span><br><span class="line">    --index-fastq-<span class="built_in">list</span> <span class="module-access"><span class="module"><span class="identifier">Library1_S1_L001_R2_001</span>.</span></span>fastq.gz</span><br><span class="line"></span><br><span class="line">snaptools dex-fastq \</span><br><span class="line">    --input-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_S1_L001_R3_001</span>.</span></span>fastq.gz \</span><br><span class="line">    --output-fastq=<span class="module-access"><span class="module"><span class="identifier">Library1_S1_L001_R3_001</span>.</span></span>dex.fastq.gz \ </span><br><span class="line">    --index-fastq-<span class="built_in">list</span> <span class="module-access"><span class="module"><span class="identifier">Library1_S1_L001_R2_001</span>.</span></span>fastq.gz</span><br></pre></td></tr></table></figure>
+<h3 id="4can-i-run-snapatac-with-cellranger-outcome"><a class="markdownIt-Anchor" href="#4can-i-run-snapatac-with-cellranger-outcome"></a> 4）Can I run SnapATAC with CellRanger outcome?</h3>
+<p>Yes. There are two entry points</p>
+<p>（1）use the position sorted bam file (recommanded).</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 查看比对的bam文件信息</span><br><span class="line">samtools view atac_v1_adult_brain_fresh_5k_possorted_bam.bam</span><br><span class="line">A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">1216</span>:<span class="number">26458</span>:<span class="number">34976</span>    <span class="number">99</span>  chr1    <span class="number">3000138</span> <span class="number">60</span>  <span class="number">50</span>M =   <span class="number">3000474</span> <span class="number">385</span> TGATGACTGCCTCTATTTCTTTAGGGGAAATGGGACTTTTAGTCCATGAA  FFFFFFFFFFFFFFFF,FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF  NM:i:<span class="number">0</span>  MD:Z:<span class="number">50</span> MC:Z:<span class="number">49</span>M    AS:i:<span class="number">50</span> XS:i:<span class="number">37</span> CR:Z:GGTTGCGAGCCGCAAA   CY:Z:FFFFFFFFFFFFFFFF   CB:Z:GGTTGCGAGCCGCAAA<span class="number">-1</span> BC:Z:AACGGTCA   QT:Z:FFFFFFFFGP:i:<span class="number">3000137</span>   MP:i:<span class="number">3000522</span>    MQ:i:<span class="number">40</span> RG:Z:atac_v1_adult_brain_fresh_5k:MissingLibrary:<span class="number">1</span>:HJYFLDSXX:<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>在比对的read名称前添加barcode信息<br><br />
+The cell barcode is embedded in the tag CB:Z:GGTTGCGAGCCGCAAA-1, you can modify the bam file by add the cell barcode GGTTGCGAGCCGCAAA-1 to the beginning of read</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># extract the header file</span><br><span class="line">samtools view atac_v1_adult_brain_fresh_5k_possorted_bam.bam -H &gt; atac_v1_adult_brain_fresh_5k_possorted.header.sam</span><br><span class="line"></span><br><span class="line"># create a bam file with the barcode embedded <span class="built_in">int</span>o the read name</span><br><span class="line">cat &lt;( cat atac_v1_adult_brain_fresh_5k_possorted.header.sam ) \</span><br><span class="line">&lt;( samtools view atac_v1_adult_brain_fresh_5k_possorted_bam.bam | awk <span class="string">'&#123;for (i=12; i&lt;=NF; ++i) &#123; if ($i ~ "^CB:Z:")&#123; td[substr($i,1,2)] = substr($i,6,length($i)-5); &#125; &#125;; printf "%s:%s\n", td["CB"], $0 &#125;'</span> ) \</span><br><span class="line">| samtools view -bS - &gt; atac_v1_adult_brain_fresh_5k_possorted.snap.bam</span><br><span class="line"></span><br><span class="line"># 查看添加好barcode信息的bam文件</span><br><span class="line">samtools view atac_v1_adult_brain_fresh_5k_possorted.snap.bam | cut -f <span class="number">1</span> | head </span><br><span class="line">GGTTGCGAGCCGCAAA<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">1216</span>:<span class="number">26458</span>:<span class="number">34976</span></span><br><span class="line">GGTTGCGAGCCGCAAA<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">2256</span>:<span class="number">23194</span>:<span class="number">13823</span></span><br><span class="line">GGTTGCGAGCCGCAAA<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">2546</span>:<span class="number">5258</span>:<span class="number">31955</span></span><br><span class="line">CTCAGCTAGTGTCACT<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">1</span>:<span class="number">2428</span>:<span class="number">8648</span>:<span class="number">18349</span></span><br><span class="line">CTCAGCTAGTGTCACT<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">1</span>:<span class="number">2428</span>:<span class="number">8648</span>:<span class="number">18349</span></span><br><span class="line">GAAGTCTGTAACACTC<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">3</span>:<span class="number">2546</span>:<span class="number">14968</span>:<span class="number">2331</span></span><br><span class="line">GAAGTCTGTAACACTC<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">3</span>:<span class="number">2546</span>:<span class="number">14705</span>:<span class="number">2628</span></span><br><span class="line">GGTTGCGAGCCGCAAA<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">1216</span>:<span class="number">26458</span>:<span class="number">34976</span></span><br><span class="line">GGTTGCGAGCCGCAAA<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">2256</span>:<span class="number">23194</span>:<span class="number">13823</span></span><br><span class="line">GGTTGCGAGCCGCAAA<span class="number">-1</span>:A00519:<span class="number">218</span>:HJYFLDSXX:<span class="number">2</span>:<span class="number">2546</span>:<span class="number">5258</span>:<span class="number">31955</span></span><br></pre></td></tr></table></figure>
+<p>对bam文件按read的名称进行排序<br><br />
+Then sort the bam file by read name:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">samtools sort -n -@ <span class="number">10</span> -m <span class="number">1</span>G atac_v1_adult_brain_fresh_5k_possorted<span class="selector-class">.snap</span><span class="selector-class">.bam</span> -o atac_v1_adult_brain_fresh_5k<span class="selector-class">.snap</span><span class="selector-class">.nsrt</span>.bam</span><br></pre></td></tr></table></figure>
+<p>使用snaptools进行数据预处理生成snap文件<br><br />
+Then generate the snap file</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">snaptools snap-pre  \</span><br><span class="line">    <span class="attribute">--input-file</span>=atac_v1_adult_brain_fresh_5k.snap.nsrt.bam  \</span><br><span class="line">    <span class="attribute">--output-snap</span>=atac_v1_adult_brain_fresh_5k.snap  \</span><br><span class="line">    <span class="attribute">--genome-name</span>=mm10  \</span><br><span class="line">    <span class="attribute">--genome-size</span>=mm10.chrom.sizes  \</span><br><span class="line">    <span class="attribute">--min-mapq</span>=30  \</span><br><span class="line">    <span class="attribute">--min-flen</span>=50  \</span><br><span class="line">    <span class="attribute">--max-flen</span>=1000  \</span><br><span class="line">    <span class="attribute">--keep-chrm</span>=<span class="literal">TRUE</span>  \</span><br><span class="line">    <span class="attribute">--keep-single</span>=<span class="literal">FALSE</span>  \</span><br><span class="line">    <span class="attribute">--keep-secondary</span>=<span class="literal">False</span>  \</span><br><span class="line">    <span class="attribute">--overwrite</span>=<span class="literal">True</span>  \</span><br><span class="line">    <span class="attribute">--max-num</span>=20000  \</span><br><span class="line">    <span class="attribute">--min-cov</span>=500  \</span><br><span class="line">    <span class="attribute">--verbose</span>=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>删除中间文件<br><br />
+remove temporary files</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">rm</span> <span class="selector-tag">atac_v1_adult_brain_fresh_5k</span><span class="selector-class">.snap</span><span class="selector-class">.snap</span><span class="selector-class">.bam</span> </span><br><span class="line"><span class="selector-tag">rm</span> <span class="selector-tag">atac_v1_adult_brain_fresh_5k_possorted</span><span class="selector-class">.header</span><span class="selector-class">.sam</span></span><br></pre></td></tr></table></figure>
+<p>（2）use the <mark class="label default"><font color=c52950>fragment tsv file</font></mark>. Fragment file is already filtered, this will disable snaptools to generate quality control metrics.</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># decompress the gz file</span></span><br><span class="line">gunzip atac_v1_adult_brain_fresh_5k_fragments.tsv.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># sort the tsv file using the 4th column (barcode column)</span></span><br><span class="line">sort -k4,4 atac_v1_adult_brain_fresh_5k_fragments.tsv &gt; atac_v1_adult_brain_fresh_5k_fragments.bed</span><br><span class="line"></span><br><span class="line"><span class="comment"># compress the bed file </span></span><br><span class="line">gzip atac_v1_adult_brain_fresh_5k_fragments.bed</span><br><span class="line"></span><br><span class="line"><span class="comment"># run snap files using the bed file</span></span><br><span class="line">snaptools snap-pre  \</span><br><span class="line">    <span class="attribute">--input-file</span>=atac_v1_adult_brain_fresh_5k_fragments.bed.gz  \</span><br><span class="line">    <span class="attribute">--output-snap</span>=atac_v1_adult_brain_fresh_5k.snap  \</span><br><span class="line">    <span class="attribute">--genome-name</span>=mm10  \</span><br><span class="line">    <span class="attribute">--genome-size</span>=mm10.chrom.sizes  \</span><br><span class="line">    <span class="attribute">--min-mapq</span>=30  \</span><br><span class="line">    <span class="attribute">--min-flen</span>=50  \</span><br><span class="line">    <span class="attribute">--max-flen</span>=1000  \</span><br><span class="line">    <span class="attribute">--keep-chrm</span>=<span class="literal">TRUE</span>  \</span><br><span class="line">    <span class="attribute">--keep-single</span>=<span class="literal">FALSE</span>  \</span><br><span class="line">    <span class="attribute">--keep-secondary</span>=<span class="literal">False</span>  \</span><br><span class="line">    <span class="attribute">--overwrite</span>=<span class="literal">True</span>  \</span><br><span class="line">    <span class="attribute">--max-num</span>=20000  \</span><br><span class="line">    <span class="attribute">--min-cov</span>=500  \</span><br><span class="line">    <span class="attribute">--verbose</span>=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="5how-to-create-a-snap-file-from-bam-or-bed-file"><a class="markdownIt-Anchor" href="#5how-to-create-a-snap-file-from-bam-or-bed-file"></a> 5）How to create a snap file from bam or bed file?</h3>
+<p>在很多情况下，我们可以直接使用snaptools pre子程序将比对好的、按read名称进行排序的bam或bed文件作为输入，生成snap格式文件。强烈建议使用未经过滤的比对文件作为输入。<br><br />
+（1）对于bam文件，我们需要在read的名称前添加细胞的barcode信息，如下所示：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">samtools view demo.bam|head</span><br><span class="line"></span><br><span class="line">AAACTACCAGAAAGACGCAGTT:<span class="number">7001113</span>:<span class="number">968</span>:HMYT2BCX2:<span class="number">1</span>:<span class="number">1215</span>:<span class="number">20520</span>:<span class="number">88475</span>    <span class="number">77</span>  *   <span class="number">0</span>   <span class="number">0</span>   *   *   <span class="number">0</span>   <span class="number">0</span>CTATGAGCACCGTCTCCGCCTCAGATGTGTATAAGAGACAGCAGAGTAAC @DDBAI??E?<span class="number">1</span>/&lt;<span class="symbol">DCGECEHEHHGG1@</span><span class="symbol">GEHIIIHGGDGE@</span>HIHEEIIHH1  AS:i:<span class="number">0</span>  XS:i:<span class="number">0</span></span><br><span class="line">AAACTACCAGAAAGACGCAGTT:<span class="number">7001113</span>:<span class="number">968</span>:HMYT2BCX2:<span class="number">1</span>:<span class="number">1215</span>:<span class="number">20520</span>:<span class="number">88475</span>    <span class="number">141</span> *   <span class="number">0</span>   <span class="number">0</span>   *   *   <span class="number">0</span>   <span class="number">0</span>GGCTTGTACAGAGCAAGTGCTGAAGTCCCTTTCTGATGACGTTCAACAGC <span class="number">0</span>&lt;<span class="number">000</span>/&lt;&lt;<span class="number">1</span>&lt;D1CC111&lt;&lt;<span class="number">1</span>&lt;<span class="number">1</span>&lt;<span class="number">111</span>&lt;<span class="number">111</span>&lt;&lt;CDCF1&lt;<span class="number">1</span>&lt;DHH&lt;&lt;&lt;&lt;C11  AS:i:<span class="number">0</span>  XS:i:<span class="number">0</span></span><br><span class="line">AAACTACCAGAAAGACGCAGTT:<span class="number">7001113</span>:<span class="number">968</span>:HMYT2BCX2:<span class="number">1</span>:<span class="number">2201</span>:<span class="number">20009</span>:<span class="number">41468</span>    <span class="number">77</span>  *   <span class="number">0</span>   <span class="number">0</span>   *   *   <span class="number">0</span>   <span class="number">0</span>CGGTGCCCCTGTCCTGTTCGTGCCCACCGTCTCCGCCTCAGATGTGTATA <span class="symbol">DDD@</span>D/D&lt;DHIHEHCCF1&lt;&lt;CCCGH?GHI1C1DHIII0&lt;<span class="number">1</span>D1&lt;<span class="number">111</span>&lt;<span class="number">1</span>&lt;<span class="number">1</span>  AS:i:<span class="number">0</span>  XS:i:<span class="number">0</span></span><br><span class="line">AAACTACCAGAAAGACGCAGTT:<span class="number">7001113</span>:<span class="number">968</span>:HMYT2BCX2:<span class="number">1</span>:<span class="number">2201</span>:<span class="number">20009</span>:<span class="number">41468</span>    <span class="number">141</span> *   <span class="number">0</span>   <span class="number">0</span>   *   *   <span class="number">0</span>   <span class="number">0</span>GAGCGAGGGCGGCAGAGGCAGGGGGAGGAGACCCGGTGGCCCGGCAGGCT <span class="number">0</span>&lt;<span class="number">00</span>&lt;/&lt;<span class="comment">//&lt;//&lt;//111000/&lt;&lt;/&lt;/&lt;0&lt;1&lt;1&lt;//&lt;&lt;0&lt;DCC/&lt;///&lt;D  AS:i:0  XS:i:0</span></span><br><span class="line"></span><br><span class="line"># 使用snaptools将bam文件转换为snap格式文件</span><br><span class="line">snaptools snap-pre  \</span><br><span class="line">    --input-file=demo.bam  \</span><br><span class="line">    --output-snap=demo.snap  \</span><br><span class="line">    --genome-name=mm10  \</span><br><span class="line">    --genome-size=mm10.chrom.sizes  \</span><br><span class="line">    --min-mapq=<span class="number">30</span>  \</span><br><span class="line">    --min-flen=<span class="number">0</span>  \</span><br><span class="line">    --max-flen=<span class="number">1000</span>  \</span><br><span class="line">    --keep-chrm=TRUE  \</span><br><span class="line">    --keep-single=TRUE  \</span><br><span class="line">    --keep-secondary=False  \</span><br><span class="line">    --overwrite=True  \</span><br><span class="line">    --min-cov=<span class="number">100</span>  \</span><br><span class="line">    --verbose=True</span><br></pre></td></tr></table></figure>
+<p>（2）对于bed格式的文件，应将barcode信息添加到第四列中，如下所示：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">zcat demo.bed.gz | head</span><br><span class="line"></span><br><span class="line">chr2    74358918    74358981    AACGAGAGCTAAAGACGCAGTT</span><br><span class="line">chr6    134212048   134212100   AACGAGAGCTAAAGACGCAGTT</span><br><span class="line">chr10    93276785    93276892    AACGAGAGCTAAAGACGCAGTT</span><br><span class="line">chr2    128601366   128601634   AACGAGAGCTAAAGCGCATGCT</span><br><span class="line">chr16    62129428    62129661    AACGAGAGCTAACAACCTTCTG</span><br><span class="line">chr8    84946184    84946369    AACGAGAGCTAACAACCTTCTG</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用snaptools将bed文件转换为snap格式文件</span></span><br><span class="line">snaptools snap-pre  \</span><br><span class="line">    <span class="attribute">--input-file</span>=demo.bed.gz  \</span><br><span class="line">    <span class="attribute">--output-snap</span>=demo.snap  \</span><br><span class="line">    <span class="attribute">--genome-name</span>=mm10  \</span><br><span class="line">    <span class="attribute">--genome-size</span>=mm10.chrom.sizes  \</span><br><span class="line">    <span class="attribute">--min-mapq</span>=30  \</span><br><span class="line">    <span class="attribute">--min-flen</span>=0  \</span><br><span class="line">    <span class="attribute">--max-flen</span>=1000  \</span><br><span class="line">    <span class="attribute">--keep-chrm</span>=<span class="literal">TRUE</span>  \</span><br><span class="line">    <span class="attribute">--keep-single</span>=<span class="literal">TRUE</span>  \</span><br><span class="line">    <span class="attribute">--keep-secondary</span>=<span class="literal">False</span>  \</span><br><span class="line">    <span class="attribute">--overwrite</span>=<span class="literal">True</span>  \</span><br><span class="line">    <span class="attribute">--min-cov</span>=100  \</span><br><span class="line">    <span class="attribute">--verbose</span>=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="6how-to-group-reads"><a class="markdownIt-Anchor" href="#6how-to-group-reads"></a> 6）How to group reads?</h3>
+<p>（1）Group reads from one cell ATACAGCCTCGC in snap file sample1.snap.</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">library(SnapATAC);</span><br><span class="line"><span class="attr">snap_files</span> = <span class="string">"sample1.snap"</span>;</span><br><span class="line"><span class="attr">barcode_sel</span> = <span class="string">"ATACAGCCTCGC"</span>;</span><br><span class="line">reads.<span class="attr">gr</span> = extractReads(barcode_sel, snap_files);</span><br></pre></td></tr></table></figure>
+<p>（2）Group reads from multiple barcodes in one snap file.</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">library(SnapATAC);</span><br><span class="line"><span class="attr">barcode_sel</span> = c(<span class="string">"ATACAGCCTCGC"</span>, <span class="string">"ATACAGCCTCGG"</span>)</span><br><span class="line"><span class="attr">snap_files</span> = rep(<span class="string">"sample1.snap"</span>, <span class="number">2</span>);</span><br><span class="line">reads.<span class="attr">gr</span> = extractReads(barcode_sel, snap_files);</span><br></pre></td></tr></table></figure>
+<p>（3）Group reads from multiple barcodes and multiple snap files.</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">library(SnapATAC);</span><br><span class="line"><span class="attr">barcode_sel</span> = rep(<span class="string">"ATACAGCCTCGC"</span>, <span class="number">2</span>);</span><br><span class="line"><span class="attr">snap_files</span> = c(<span class="string">"sample1.snap"</span>, <span class="string">"sample2.snap"</span>);</span><br><span class="line">reads.<span class="attr">gr</span> = extractReads(barcode_sel, snap_files);</span><br></pre></td></tr></table></figure>
+<h3 id="7how-to-analyze-multiple-samples-together"><a class="markdownIt-Anchor" href="#7how-to-analyze-multiple-samples-together"></a> 7）How to analyze multiple samples together?</h3>
+<p>因为SnapATAC软件使用cell-by-bin矩阵对细胞进行聚类分群，这使他很容易将多个样本进行结合并执行比较分析。它需要将所有的样本创建相同bin size大小的cell-by-bin矩阵。在这里，我们以PBMC_5K和PBMC_10K数据为例进行分析。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ R</span><br><span class="line"><span class="comment"># 加载SnapATAC包</span></span><br><span class="line">library(SnapATAC);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载示例数据</span></span><br><span class="line">system(<span class="string">"wget http://renlab.sdsc.edu/r3fang/share/Fang_2019/published_scATAC/atac_v1_pbmc_10k_fastqs/atac_v1_pbmc_10k.snap"</span>);</span><br><span class="line">system(<span class="string">"wget http://renlab.sdsc.edu/r3fang/share/Fang_2019/published_scATAC/atac_v1_pbmc_5k_fastqs/atac_v1_pbmc_5k.snap"</span>);</span><br><span class="line"><span class="built_in">file</span>.<span class="built_in">list</span> = c(<span class="string">"atac_v1_pbmc_5k.snap"</span>, <span class="string">"atac_v1_pbmc_10k.snap"</span>);</span><br><span class="line">sample.<span class="built_in">list</span> = c(<span class="string">"pbmc.5k"</span>, <span class="string">"pbmc.10k"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用createSnap函数将两个数据结合在一起</span></span><br><span class="line">x.sp = createSnap(<span class="built_in">file</span>=<span class="built_in">file</span>.<span class="built_in">list</span>, sample=sample.<span class="built_in">list</span>);</span><br></pre></td></tr></table></figure>
+<mark class="label default"><font color=c52950>createSnap</font></mark> 函数将创建一个snap对象，该对象中包含了每个snap文件的名称和相应的barcodes信息。
+<h3 id="8how-to-choose-bin-size"><a class="markdownIt-Anchor" href="#8how-to-choose-bin-size"></a> 8）How to choose bin size?</h3>
+<p>SnapATAC软件是基于cell-by-bin矩阵对细胞进行聚类分群的，因此选择不同的bin size可能对细胞的聚类分群产生较大的影响。如何选择最优的bin size，这个问题没有绝对的答案。</p>
+<p>一方面，我们发现在5kb-50kb范围内的bin size大小的改变，并没有明显地改变细胞聚类分群的结果(如下图所示)。而另一方面，我们确实注意到了一个大的bin size通常会生成相对较少的cluster。这种聚类的差异，可以使用分辨率较小的Louvain聚类算法进行弥补。</p>
+<p>使用较大bin size的好处是可以节省一些内存，这对于一些大型数据集尤为有用。这里提供了一个bin size大小选择的主观建议。</p>
+<table>
+<thead>
+<tr>
+<th>#of cell</th>
+<th>bin size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-50k</td>
+<td>5kb</td>
+</tr>
+<tr>
+<td>50k-100k</td>
+<td>10kb</td>
+</tr>
+<tr>
+<td>100k-1M</td>
+<td>20kb-50kb</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #555;font-size:14px;">-------------The End-------------</div>
+    
+</div>
+
+  
+</div>
+        <div class="reward-container">
+  <div>Buy Me A Coffee</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Geng Lee WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Geng Lee Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <center>  <!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="addthis_inline_share_toolbox_ew9r"></div> </center>
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/R/" rel="tag"><i class="fa fa-tag"></i> R</a>
+              <a href="/tags/scRNA/" rel="tag"><i class="fa fa-tag"></i> scRNA</a>
+              <a href="/tags/ATAC/" rel="tag"><i class="fa fa-tag"></i> ATAC</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/4a17b156/" rel="prev" title="Hi Guys">
+      <i class="fa fa-chevron-left"></i> Hi Guys
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/555c5d02/" rel="next" title="python 实战-根据已知蛋白名称从基因组提取蛋白序列">
+      python 实战-根据已知蛋白名称从基因组提取蛋白序列 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+  
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac简介"><span class="nav-number">1.</span> <span class="nav-text"> SnapATAC简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac软件安装"><span class="nav-number">2.</span> <span class="nav-text"> SnapATAC软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#requirements"><span class="nav-number">2.1.</span> <span class="nav-text"> Requirements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pre-print"><span class="nav-number">2.2.</span> <span class="nav-text"> Pre-print</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#installation"><span class="nav-number">2.3.</span> <span class="nav-text"> Installation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac常见问题汇总"><span class="nav-number">3.</span> <span class="nav-text"> SnapATAC常见问题汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1what-is-a-snap-file"><span class="nav-number">3.1.</span> <span class="nav-text"> 1）What is a snap file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2how-to-create-a-snap-file-from-fastq-file"><span class="nav-number">3.2.</span> <span class="nav-text"> 2）How to create a snap file from fastq file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3how-to-create-snap-file-from-10x-dataset"><span class="nav-number">3.3.</span> <span class="nav-text"> 3）How to create snap file from 10X dataset?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4can-i-run-snapatac-with-cellranger-outcome"><span class="nav-number">3.4.</span> <span class="nav-text"> 4）Can I run SnapATAC with CellRanger outcome?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5how-to-create-a-snap-file-from-bam-or-bed-file"><span class="nav-number">3.5.</span> <span class="nav-text"> 5）How to create a snap file from bam or bed file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6how-to-group-reads"><span class="nav-number">3.6.</span> <span class="nav-text"> 6）How to group reads?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7how-to-analyze-multiple-samples-together"><span class="nav-number">3.7.</span> <span class="nav-text"> 7）How to analyze multiple samples together?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8how-to-choose-bin-size"><span class="nav-number">3.8.</span> <span class="nav-text"> 8）How to choose bin size?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Geng Lee"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Geng Lee</p>
+  <div class="site-description" itemprop="description">To be a better me</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/geng-lee" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;geng-lee" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/profile.php?id=100011418934892" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;profile.php?id&#x3D;100011418934892" rel="noopener" target="_blank"><i class="fab fa-facebook fa-fw"></i>Facebook</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:2716581852@qq.com" title="E-Mail → mailto:2716581852@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/u/5080485310" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;5080485310" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-coffee fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.buymeacoffee.com/GengLee" title="https:&#x2F;&#x2F;www.buymeacoffee.com&#x2F;GengLee" rel="noopener" target="_blank">Buy Me A Coffee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Geng Lee</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">43k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">39 mins.</span>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eef5a9cd125218a" async="async"></script>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '02ff9c675de13b9fbbbb',
+      clientSecret: 'f56e4a1eb98b4f3dfde62cca3ec7c19f9fd6a016',
+      repo        : 'gitalk-comments',
+      owner       : 'geng-lee',
+      admin       : ['geng-lee'],
+      id          : 'c47be7dd57be5a849bb92c2e02eb615d',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
