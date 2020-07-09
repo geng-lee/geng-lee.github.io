@@ -58,7 +58,7 @@ Ka（nonsynonymous substitutions）:A base mutation in a codon changes the amino
     
       &lt;h1 id=&quot;introduction&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#introduction&quot;&gt;&lt;/a&gt; Introduction&lt;/h1&gt;
 &lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;10x-adult-mouse-brain&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#10x-adult-mouse-brain&quot;&gt;&lt;/a&gt; 10X Adult Mouse Brain&lt;/h2&gt;
-&lt;p&gt;In this example, we will be analyzing a dataset of 5K cells from the adult mouse brain available from 10X genomics. All the data used in this analysis can be downloaded from &lt;a href=&quot;http://renlab.sdsc.edu/r3fang/share/github/Mouse_Brain_10X/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this example, we will be analyzing a dataset of 5K cells from the adult mouse brain available from 10X genomics. All the data used in this analysis can be downloaded from &lt;span class=&quot;exturl&quot; data-url=&quot;aHR0cDovL3JlbmxhYi5zZHNjLmVkdS9yM2Zhbmcvc2hhcmUvZ2l0aHViL01vdXNlX0JyYWluXzEwWC8=&quot;&gt;here&lt;i class=&quot;fa fa-external-link-alt&quot;&gt;&lt;/i&gt;&lt;/span&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;br&gt;
     
@@ -135,13 +135,11 @@ Ka（nonsynonymous substitutions）:A base mutation in a codon changes the amino
     <link href="http://yoursite.com/posts/4a17b156/"/>
     <id>http://yoursite.com/posts/4a17b156/</id>
     <published>2020-06-16T14:12:55.826Z</published>
-    <updated>2020-07-09T08:15:49.390Z</updated>
+    <updated>2020-07-09T11:48:12.071Z</updated>
     
     <summary type="html">
     
-      &lt;center&gt;
-&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;
-&lt;/center&gt;
+      &lt;center&gt;&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;&lt;/center&gt;
     
     </summary>
     
