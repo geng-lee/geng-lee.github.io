@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-07-09T13:24:35.490Z</updated>
+  <updated>2020-07-09T13:58:56.153Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -17,42 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Calculation of KaKs Value</title>
-    <link href="https://geng-lee.github.io/posts/539d6d7a/"/>
-    <id>https://geng-lee.github.io/posts/539d6d7a/</id>
-    <published>2020-06-25T07:18:07.000Z</published>
-    <updated>2020-07-09T13:24:35.490Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;the-concept-and-meaning-of-kaks&quot;&gt;The concept and meaning of Ka,Ks&lt;/h2&gt;
-&lt;hr /&gt;
-&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Ks（synonymous substitutions）:A base mutation in a codon does not change the amino acid encoded by the codon. Ka（nonsynonymous substitutions）:A base mutation in a codon changes the amino acid encoded by that codon.&lt;/p&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="Genome" scheme="https://geng-lee.github.io/categories/Genome/"/>
-    
-    
-      <category term="Python" scheme="https://geng-lee.github.io/tags/Python/"/>
-    
-      <category term="KaKs" scheme="https://geng-lee.github.io/tags/KaKs/"/>
-    
-      <category term="shell" scheme="https://geng-lee.github.io/tags/shell/"/>
-    
-      <category term="perl" scheme="https://geng-lee.github.io/tags/perl/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Analysis of single-cell ATAC-seq data using SnapATAC software (2)：10x Adult Mouse Brain</title>
     <link href="https://geng-lee.github.io/posts/34331839/"/>
     <id>https://geng-lee.github.io/posts/34331839/</id>
-    <published>2020-06-20T01:05:25.000Z</published>
-    <updated>2020-07-09T13:16:38.159Z</updated>
+    <published>2020-06-25T01:05:25.000Z</published>
+    <updated>2020-07-09T13:58:56.153Z</updated>
     
     <summary type="html">
     
@@ -74,6 +43,37 @@
       <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
     
       <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Calculation of KaKs Value</title>
+    <link href="https://geng-lee.github.io/posts/539d6d7a/"/>
+    <id>https://geng-lee.github.io/posts/539d6d7a/</id>
+    <published>2020-06-20T07:18:07.000Z</published>
+    <updated>2020-07-09T13:58:09.978Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;the-concept-and-meaning-of-kaks&quot;&gt;The concept and meaning of Ka,Ks&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Ks (synonymous substitutions): A base mutation in a codon does not change the amino acid encoded by the codon. Ka (nonsynonymous substitutions): A base mutation in a codon changes the amino acid encoded by that codon.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Genome" scheme="https://geng-lee.github.io/categories/Genome/"/>
+    
+    
+      <category term="Python" scheme="https://geng-lee.github.io/tags/Python/"/>
+    
+      <category term="KaKs" scheme="https://geng-lee.github.io/tags/KaKs/"/>
+    
+      <category term="shell" scheme="https://geng-lee.github.io/tags/shell/"/>
+    
+      <category term="perl" scheme="https://geng-lee.github.io/tags/perl/"/>
     
   </entry>
   
@@ -107,13 +107,13 @@
     <link href="https://geng-lee.github.io/posts/ac829b5/"/>
     <id>https://geng-lee.github.io/posts/ac829b5/</id>
     <published>2020-06-17T04:07:43.000Z</published>
-    <updated>2020-07-09T13:08:04.445Z</updated>
+    <updated>2020-07-09T14:02:00.285Z</updated>
     
     <summary type="html">
     
       &lt;h2 id=&quot;snapatac简介&quot;&gt;SnapATAC简介&lt;/h2&gt;
 &lt;hr /&gt;
-&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;&lt;strong&gt;SnapATAC&lt;/strong&gt;(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。&lt;/p&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;&lt;strong&gt;SnapATAC&lt;/strong&gt; (Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;&lt;br&gt;&lt;/p&gt;
     
@@ -138,7 +138,7 @@
     <link href="https://geng-lee.github.io/posts/4a17b156/"/>
     <id>https://geng-lee.github.io/posts/4a17b156/</id>
     <published>2020-06-16T14:12:55.826Z</published>
-    <updated>2020-07-09T13:17:08.282Z</updated>
+    <updated>2020-07-09T14:05:26.275Z</updated>
     
     <summary type="html">
     

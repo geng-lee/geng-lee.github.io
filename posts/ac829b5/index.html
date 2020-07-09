@@ -22,17 +22,17 @@
     var CONFIG = {"hostname":"geng-lee.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.3","exturl":true,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="SnapATAC简介  SnapATAC(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC">
+  <meta name="description" content="SnapATAC简介  SnapATAC (Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用SnapATAC软件分析单细胞ATAC-seq数据（一）：SnapATAC简介与安装">
 <meta property="og:url" content="https://geng-lee.github.io/posts/ac829b5/index.html">
 <meta property="og:site_name" content="GengLee&#39;s Blog">
-<meta property="og:description" content="SnapATAC简介  SnapATAC(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC">
+<meta property="og:description" content="SnapATAC简介  SnapATAC (Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATA">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://camo.githubusercontent.com/fe8c50206e0c567a1691f11ad3e9ea5482a0f9aa/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f322e706e67">
 <meta property="og:image" content="https://camo.githubusercontent.com/65e69e4036b9cbcd7ced5091a7f8ce22dd11a29b/68747470733a2f2f737570706f72742e31307867656e6f6d6963732e636f6d2f696d672f63656c6c72616e6765722d617461632d776f726b666c6f77732f6d6b66617374715f312e706e67">
 <meta property="article:published_time" content="2020-06-17T04:07:43.000Z">
-<meta property="article:modified_time" content="2020-07-09T13:08:04.445Z">
+<meta property="article:modified_time" content="2020-07-09T14:02:00.285Z">
 <meta property="article:author" content="Geng Lee">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="R">
@@ -237,7 +237,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-09 21:08:04" itemprop="dateModified" datetime="2020-07-09T21:08:04+08:00">2020-07-09</time>
+                <time title="Modified: 2020-07-09 22:02:00" itemprop="dateModified" datetime="2020-07-09T22:02:00+08:00">2020-07-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -283,7 +283,7 @@
       
         <h2 id="snapatac简介">SnapATAC简介</h2>
 <hr />
-<div class="note info no-icon"><p><strong>SnapATAC</strong>(Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。</p>
+<div class="note info no-icon"><p><strong>SnapATAC</strong> (Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。</p>
 </div>
 <p><br></p>
 <a id="more"></a>
@@ -293,8 +293,9 @@
 <ul>
 <li>Linux/Unix</li>
 <li>Python (&gt;= 2.7 &amp; &lt; 3.0) (SnapTools) (highly recommanded for 2.7);</li>
-<li>R (&gt;= 3.4.0 &amp; &lt; 3.6.0) (SnapATAC) (3.6 does not work for rhdf5 package);<br> ### Pre-print</li>
+<li>R (&gt;= 3.4.0 &amp; &lt; 3.6.0) (SnapATAC) (3.6 does not work for rhdf5 package);<br></li>
 </ul>
+<h3 id="pre-print">Pre-print</h3>
 <p>Rongxin Fang, Sebastian Preissl, Xiaomeng Hou, Jacinta Lucero, Xinxin Wang, Amir Motamedi, Andrew K. Shiau, Eran A. Mukamel, Yanxiao Zhang, M. Margarita Behrens, Joseph Ecker, Bing Ren. <strong>Fast and Accurate Clustering of Single Cell Epigenomes Reveals Cis-Regulatory Elements in Rare Cell Types.</strong> bioRxiv 615179; doi: <span class="exturl" data-url="aHR0cHM6Ly9kb2kub3JnLzEwLjExMDEvNjE1MTc5">https://doi.org/10.1101/615179<i class="fa fa-external-link-alt"></i></span><br></p>
 <h3 id="installation">Installation</h3>
 <p>SnapATAC软件主要由以下两个组件组成：<code>Snaptools</code>和<code>SnapATAC</code>.</p>
@@ -501,7 +502,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac简介"><span class="nav-number">1.</span> <span class="nav-text">SnapATAC简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac软件安装"><span class="nav-number">2.</span> <span class="nav-text">SnapATAC软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#requirements"><span class="nav-number">2.1.</span> <span class="nav-text">Requirements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#installation"><span class="nav-number">2.2.</span> <span class="nav-text">Installation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac常见问题汇总"><span class="nav-number">3.</span> <span class="nav-text">SnapATAC常见问题汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#what-is-a-snap-file"><span class="nav-number">3.1.</span> <span class="nav-text">1）What is a snap file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-create-a-snap-file-from-fastq-file"><span class="nav-number">3.2.</span> <span class="nav-text">2）How to create a snap file from fastq file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-create-snap-file-from-10x-dataset"><span class="nav-number">3.3.</span> <span class="nav-text">3）How to create snap file from 10X dataset?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#can-i-run-snapatac-with-cellranger-outcome"><span class="nav-number">3.4.</span> <span class="nav-text">4）Can I run SnapATAC with CellRanger outcome?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-create-a-snap-file-from-bam-or-bed-file"><span class="nav-number">3.5.</span> <span class="nav-text">5）How to create a snap file from bam or bed file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-group-reads"><span class="nav-number">3.6.</span> <span class="nav-text">6）How to group reads?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-analyze-multiple-samples-together"><span class="nav-number">3.7.</span> <span class="nav-text">7）How to analyze multiple samples together?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-choose-bin-size"><span class="nav-number">3.8.</span> <span class="nav-text">8）How to choose bin size?</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac简介"><span class="nav-number">1.</span> <span class="nav-text">SnapATAC简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac软件安装"><span class="nav-number">2.</span> <span class="nav-text">SnapATAC软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#requirements"><span class="nav-number">2.1.</span> <span class="nav-text">Requirements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pre-print"><span class="nav-number">2.2.</span> <span class="nav-text">Pre-print</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#installation"><span class="nav-number">2.3.</span> <span class="nav-text">Installation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snapatac常见问题汇总"><span class="nav-number">3.</span> <span class="nav-text">SnapATAC常见问题汇总</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#what-is-a-snap-file"><span class="nav-number">3.1.</span> <span class="nav-text">1）What is a snap file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-create-a-snap-file-from-fastq-file"><span class="nav-number">3.2.</span> <span class="nav-text">2）How to create a snap file from fastq file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-create-snap-file-from-10x-dataset"><span class="nav-number">3.3.</span> <span class="nav-text">3）How to create snap file from 10X dataset?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#can-i-run-snapatac-with-cellranger-outcome"><span class="nav-number">3.4.</span> <span class="nav-text">4）Can I run SnapATAC with CellRanger outcome?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-create-a-snap-file-from-bam-or-bed-file"><span class="nav-number">3.5.</span> <span class="nav-text">5）How to create a snap file from bam or bed file?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-group-reads"><span class="nav-number">3.6.</span> <span class="nav-text">6）How to group reads?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-analyze-multiple-samples-together"><span class="nav-number">3.7.</span> <span class="nav-text">7）How to analyze multiple samples together?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-choose-bin-size"><span class="nav-number">3.8.</span> <span class="nav-text">8）How to choose bin size?</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
