@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-07-09T13:58:56.153Z</updated>
+  <updated>2020-07-10T14:35:46.825Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -21,14 +21,14 @@
     <link href="https://geng-lee.github.io/posts/34331839/"/>
     <id>https://geng-lee.github.io/posts/34331839/</id>
     <published>2020-06-25T01:05:25.000Z</published>
-    <updated>2020-07-09T13:58:56.153Z</updated>
+    <updated>2020-07-10T14:35:46.825Z</updated>
     
     <summary type="html">
     
       &lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 &lt;hr /&gt;
 &lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;x-adult-mouse-brain&quot;&gt;10X Adult Mouse Brain&lt;/h2&gt;
-&lt;p&gt;In this example, we will be analyzing a dataset of 5K cells from the adult mouse brain available from 10X genomics. All the data used in this analysis can be downloaded from &lt;span class=&quot;exturl&quot; data-url=&quot;aHR0cDovL3JlbmxhYi5zZHNjLmVkdS9yM2Zhbmcvc2hhcmUvZ2l0aHViL01vdXNlX0JyYWluXzEwWC8=&quot;&gt;here&lt;i class=&quot;fa fa-external-link-alt&quot;&gt;&lt;/i&gt;&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;In this example, we will be analyzing a dataset of 5K cells from the adult mouse brain available from 10X genomics.&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;&lt;br&gt;&lt;/p&gt;
     
