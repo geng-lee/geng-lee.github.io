@@ -1440,7 +1440,7 @@ pre code {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #fcff6e;
+  background: #6bff34;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
