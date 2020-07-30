@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-07-30T17:53:30.421Z</updated>
+  <updated>2020-07-30T18:02:09.696Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://geng-lee.github.io/posts/1b8fd861/"/>
     <id>https://geng-lee.github.io/posts/1b8fd861/</id>
     <published>2020-07-02T00:00:05.000Z</published>
-    <updated>2020-07-30T17:53:30.421Z</updated>
+    <updated>2020-07-30T18:02:09.696Z</updated>
     
     <summary type="html">
     
@@ -48,9 +48,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
-    
       <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
+    
+      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
     
   </entry>
   
@@ -78,9 +78,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
-    
       <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
+    
+      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
     
   </entry>
   
@@ -165,9 +165,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
-    
       <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
+    
+      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
     
   </entry>
   
