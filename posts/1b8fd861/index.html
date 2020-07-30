@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/net2.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/net1.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="LASEpzFfcnNFnu_8Sy9VvRqObpPtUGArZOdqPLDPTp8">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=sans-serif:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"geng-lee.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.3","exturl":true,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction  Integrative Analysis of PBMC scATAC-seq and scRNA-seq In this example, we will be analyzing two scATAC-seq datasets (5K and 10K) and one scRNA-seq dataset from PBMC. All three datasets a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Analysis of single-cell ATAC-seq data using SnapATAC software (3)：Integrative Analysis of PBMC scATAC-seq and scRNA-seq">
+<meta property="og:url" content="https://geng-lee.github.io/posts/1b8fd861/index.html">
+<meta property="og:site_name" content="GengLee&#39;s Blog">
+<meta property="og:description" content="Introduction  Integrative Analysis of PBMC scATAC-seq and scRNA-seq In this example, we will be analyzing two scATAC-seq datasets (5K and 10K) and one scRNA-seq dataset from PBMC. All three datasets a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-1-QualityControl1.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-2-QualityControl2.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-3-BinCovDist.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-4-eigs_scatter_plot.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-5-Viz_UMAP.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-6-predict_score.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-7-Viz_umap_type.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-8-gene_exp_plot.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-9-IG_track.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-10-motif_var_plot.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-11-motif_homer_plot.png">
+<meta property="og:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-12-arc_plot.png">
+<meta property="article:published_time" content="2020-07-02T00:00:05.000Z">
+<meta property="article:modified_time" content="2020-07-30T16:14:22.499Z">
+<meta property="article:author" content="Geng Lee">
+<meta property="article:tag" content="R">
+<meta property="article:tag" content="ATAC">
+<meta property="article:tag" content="scRNA-seq">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qd5oognq8.bkt.clouddn.com/scrna3-1-QualityControl1.png">
+
+<link rel="canonical" href="https://geng-lee.github.io/posts/1b8fd861/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Analysis of single-cell ATAC-seq data using SnapATAC software (3)：Integrative Analysis of PBMC scATAC-seq and scRNA-seq | GengLee's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="GengLee's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line toggle-line-first"></span>
+        <span class="toggle-line toggle-line-middle"></span>
+        <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">GengLee's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">😏 做個迷人的混蛋 桀驁而不失鋒範</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL2dlbmctbGVl" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://geng-lee.github.io/posts/1b8fd861/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Geng Lee">
+      <meta itemprop="description" content="😏 To be a better me">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GengLee's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Analysis of single-cell ATAC-seq data using SnapATAC software (3)：Integrative Analysis of PBMC scATAC-seq and scRNA-seq
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-07-02 08:00:05" itemprop="dateCreated datePublished" datetime="2020-07-02T08:00:05+08:00">2020-07-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-07-31 00:14:22" itemprop="dateModified" datetime="2020-07-31T00:14:22+08:00">2020-07-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scRNA/" itemprop="url" rel="index"><span itemprop="name">scRNA</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>21k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>19 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="introduction">Introduction</h1>
+<hr />
+<div class="note info no-icon"><h2 id="integrative-analysis-of-pbmc-scatac-seq-and-scrna-seq">Integrative Analysis of PBMC scATAC-seq and scRNA-seq</h2>
+<p>In this example, we will be analyzing two scATAC-seq datasets (5K and 10K) and one scRNA-seq dataset from PBMC. All three datasets are freely available from 10X genomics. <br> In detail, we will be performing the following analysis:</p>
+<ol type="1">
+<li>Cell selection for PBMC 5k and 10k scATAC;</li>
+<li>Randomly sample 10,000 cells as landmarks;</li>
+<li>Unsupervised clustering of landmarks;</li>
+<li>Project the remaining (query) cells onto the landmarks;</li>
+<li>Supervised annotation of scATAC clusters using scRNA dataset;</li>
+<li>Downstream analysis including peak calling, differential analysis, prediction of gene-enhancer pairing.</li>
+</ol>
+</div>
+<p><br></p>
+<a id="more"></a>
+<h1 id="analysis-content">Analysis content</h1>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#barcode_selection">Step 1. Barcode selection<font/></a></li>
+<li><a href="#add_bmat">Step 2. Add cell-by-bin matrix</a></li>
+<li><a href="#make_binary">Step 3. Matrix binarization</a></li>
+<li><a href="#bin_filter">Step 4. Bin filtering</a></li>
+<li><a href="#diffusion_maps">Step 5. Dimensionality reduction of landmarks</a></li>
+<li><a href="#pc_select">Step 6. Determine significant components</a></li>
+<li><a href="#cluster">Step 7. Graph-based clustering</a></li>
+<li><a href="#viz">Step 8. Visualization</a></li>
+<li><a href="#annotation">Step 9. scRNA-seq based annotation</a></li>
+<li><a href="#psudo_cell">Step 10. Create psudo multiomics cells</a></li>
+<li><a href="#cell_filter">Step 11. Remove cells of low prediction score</a></li>
+<li><a href="#gene_umap">Step 12. Gene expression projected into UMAP</a></li>
+<li><a href="#peak_call">Step 13. Identify peak</a></li>
+<li><a href="#add_pmat">Step 14. Create a cell-by-peak matrix</a></li>
+<li><a href="#diff_analysis">Step 15. Identify differentially accessible regions</a></li>
+<li><a href="#chromVAR">Step 16. Motif variability analysis</a></li>
+<li><a href="#homer">Step 17. De novo motif discovery</a></li>
+<li><a href="#gene_peak_pair">Step 18. Predict gene-enhancer pairs</a></li>
+</ul>
+<p><a name="barcode_selection"></a><strong>Step 1. Barcode selection</strong><br />
+First, we select the high-quality barcodes based on two major criteria: <br> 1) number of unique fragments; <br> 2) fragments in promoter ratio; <br></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">library</span>(SnapATAC);</span><br><span class="line">&gt; snap.files = c(</span><br><span class="line">    <span class="string">"atac_pbmc_5k_nextgem.snap"</span>, </span><br><span class="line">    <span class="string">"atac_pbmc_10k_nextgem.snap"</span></span><br><span class="line">  );</span><br><span class="line">&gt; sample.names = c(</span><br><span class="line">    <span class="string">"PBMC 5K"</span>,</span><br><span class="line">    <span class="string">"PBMC 10K"</span></span><br><span class="line">  );</span><br><span class="line">&gt; barcode.files = c(</span><br><span class="line">    <span class="string">"atac_pbmc_5k_nextgem_singlecell.csv"</span>,</span><br><span class="line">    <span class="string">"atac_pbmc_10k_nextgem_singlecell.csv"</span></span><br><span class="line">  );</span><br><span class="line">&gt; x.sp.ls = lapply(seq(snap.files), <span class="keyword">function</span>(i)&#123;</span><br><span class="line">    createSnap(</span><br><span class="line">        file=snap.files[i],</span><br><span class="line">        sample=sample.names[i]</span><br><span class="line">    );</span><br><span class="line">  &#125;)</span><br><span class="line">&gt; names(x.sp.ls) = sample.names;</span><br><span class="line">&gt; barcode.ls = lapply(seq(snap.files), <span class="keyword">function</span>(i)&#123;</span><br><span class="line">    barcodes = read.csv(</span><br><span class="line">        barcode.files[i], </span><br><span class="line">        head=<span class="literal">TRUE</span></span><br><span class="line">    );</span><br><span class="line">    <span class="comment"># remove NO BAROCDE line</span></span><br><span class="line">    barcodes = barcodes[<span class="number">2</span>:nrow(barcodes),];</span><br><span class="line">    barcodes$logUMI = log10(barcodes$passed_filters + <span class="number">1</span>);</span><br><span class="line">    barcodes$promoter_ratio = (barcodes$promoter_region_fragments+<span class="number">1</span>) / (barcodes$passed_filters + <span class="number">1</span>);</span><br><span class="line">    barcodes</span><br><span class="line">  &#125;)</span><br><span class="line">&gt; plots = lapply(seq(snap.files), <span class="keyword">function</span>(i)&#123;</span><br><span class="line">    p1 = ggplot(</span><br><span class="line">        barcode.ls[[i]], </span><br><span class="line">        aes(x=logUMI, y=promoter_ratio)) + </span><br><span class="line">        geom_point(size=<span class="number">0.3</span>, col=<span class="string">"grey"</span>) +</span><br><span class="line">        theme_classic()	+</span><br><span class="line">        ggtitle(sample.names[[i]]) +</span><br><span class="line">        ylim(<span class="number">0</span>, <span class="number">1</span>) + xlim(<span class="number">0</span>, <span class="number">6</span>) + </span><br><span class="line">        labs(x = <span class="string">"log10(UMI)"</span>, y=<span class="string">"promoter ratio"</span>)</span><br><span class="line">        p1</span><br><span class="line">    &#125;)</span><br><span class="line">&gt; plots</span><br></pre></td></tr></table></figure>
+<figure class="half">
+<img src="http://qd5oognq8.bkt.clouddn.com/scrna3-1-QualityControl1.png" width="200" height="200" /> <img src="http://qd5oognq8.bkt.clouddn.com/scrna3-2-QualityControl2.png" width="200" height="200" />
+</figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.sp.ls</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">## $`PBMC <span class="number">5</span>K`</span><br><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">20000</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br><span class="line">## </span><br><span class="line">## $`PBMC <span class="number">10</span>K`</span><br><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">20000</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for both datasets, we identify usable barcodes using [3.5-5] for log10(UMI) and [0.4-0.8] for promoter ratio as cutoff.</span></span><br><span class="line">&gt; cutoff.logUMI.low = c(<span class="number">3.5</span>, <span class="number">3.5</span>);</span><br><span class="line">&gt; cutoff.logUMI.high = c(<span class="number">5</span>, <span class="number">5</span>);</span><br><span class="line">&gt; cutoff.FRIP.low = c(<span class="number">0.4</span>, <span class="number">0.4</span>);</span><br><span class="line">&gt; cutoff.FRIP.high = c(<span class="number">0.8</span>, <span class="number">0.8</span>);</span><br><span class="line">&gt; barcode.ls = lapply(seq(snap.files), <span class="keyword">function</span>(i)&#123;</span><br><span class="line">    barcodes = barcode.ls[[i]];</span><br><span class="line">    idx = which(</span><br><span class="line">        barcodes$logUMI &gt;= cutoff.logUMI.low[i] &amp; </span><br><span class="line">        barcodes$logUMI &lt;= cutoff.logUMI.high[i] &amp; </span><br><span class="line">        barcodes$promoter_ratio &gt;= cutoff.FRIP.low[i] &amp;</span><br><span class="line">        barcodes$promoter_ratio &lt;= cutoff.FRIP.high[i]</span><br><span class="line">    );</span><br><span class="line">    barcodes[idx,]</span><br><span class="line">  &#125;);</span><br><span class="line">&gt; x.sp.ls = lapply(seq(snap.files), <span class="keyword">function</span>(i)&#123;</span><br><span class="line">    barcodes = barcode.ls[[i]];</span><br><span class="line">    x.sp = x.sp.ls[[i]];</span><br><span class="line">    barcode.shared = intersect(x.sp@barcode, barcodes$barcode);</span><br><span class="line">    x.sp = x.sp[match(barcode.shared, x.sp@barcode),];</span><br><span class="line">    barcodes = barcodes[match(barcode.shared, barcodes$barcode),];</span><br><span class="line">    x.sp@metaData = barcodes;</span><br><span class="line">    x.sp</span><br><span class="line">  &#125;)</span><br><span class="line">&gt; names(x.sp.ls) = sample.names;</span><br><span class="line">&gt; x.sp.ls</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">## $`PBMC <span class="number">5</span>K`</span><br><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">4526</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br><span class="line">## </span><br><span class="line">## $`PBMC <span class="number">10</span>K`</span><br><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">9039</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># combine two snap object</span></span><br><span class="line">&gt; x.sp = Reduce(snapRbind, x.sp.ls);</span><br><span class="line">&gt; x.sp@metaData[<span class="string">"sample"</span>] = x.sp@sample;</span><br><span class="line">&gt; x.sp</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13565</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; table(x.sp@sample);</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">## PBMC <span class="number">10</span>K  PBMC <span class="number">5</span>K</span><br><span class="line">##     <span class="number">9039</span>     <span class="number">4526</span></span><br></pre></td></tr></table></figure>
+<p><a name="add_bmat"></a><strong>Step 2. Add cell-by-bin matrix</strong><br />
+Next, we add the cell-by-bin matrix of 5kb resolution to the snap object. This function will automatically read the cell-by-bin matrix from two snap files and add the concatenated matrix to <code>bmat</code> attribute of snap object.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.sp = addBmatToSnap(x.sp, bin.size=<span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+<p><a name="make_binary"></a><strong>Step 3. Matrix binarization</strong><br />
+We will convert the cell-by-bin count matrix to a binary matrix. Some items in the count matrix have abnormally high coverage perhaps due to the alignment errors. Therefore, we next remove top 0.1% items in the count matrix and then convert the remaining non-zero values to 1.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.sp = makeBinary(x.sp, mat=<span class="string">"bmat"</span>);</span><br></pre></td></tr></table></figure>
+<p><a name="bin_filter"></a><strong>Step 4. Bin filtering</strong><br />
+First, we filter out any bins overlapping with the <span class="exturl" data-url="aHR0cDovL21pdHJhLnN0YW5mb3JkLmVkdS9rdW5kYWplL2FrdW5kYWplL3JlbGVhc2UvYmxhY2tsaXN0cy8=">ENCODE blacklist<i class="fa fa-external-link-alt"></i></span> to prevent from potential artifacts.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">library</span>(GenomicRanges);</span><br><span class="line">&gt; black_list = read.table(<span class="string">"hg19.blacklist.bed.gz"</span>);</span><br><span class="line">&gt; black_list.gr = GRanges(</span><br><span class="line">    black_list[,<span class="number">1</span>], </span><br><span class="line">    IRanges(black_list[,<span class="number">2</span>], black_list[,<span class="number">3</span>])</span><br><span class="line">  );</span><br><span class="line">&gt; idy = queryHits(</span><br><span class="line">    findOverlaps(x.sp@feature, black_list.gr)</span><br><span class="line">  );</span><br><span class="line">&gt; <span class="keyword">if</span>(length(idy) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    x.sp = x.sp[,-idy, mat=<span class="string">"bmat"</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">&gt; x.sp</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13565</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">624794</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>Second, we remove unwanted chromosomes.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; chr.exclude = seqlevels(x.sp@feature)[grep(<span class="string">"random|chrM"</span>, seqlevels(x.sp@feature))];</span><br><span class="line">&gt; idy = grep(paste(chr.exclude, collapse=<span class="string">"|"</span>), x.sp@feature);</span><br><span class="line">&gt; <span class="keyword">if</span>(length(idy) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    x.sp = x.sp[,-idy, mat=<span class="string">"bmat"</span>]</span><br><span class="line">  &#125;;</span><br><span class="line">&gt; x.sp</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13565</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">624297</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>Third, the coverage of bins roughly obeys a log normal distribution. We remove the top 5% bins that overlap with invariant features such as the house keeping gene promoters.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; bin.cov = log10(Matrix::colSums(x.sp@bmat)+<span class="number">1</span>);</span><br><span class="line">&gt; hist(</span><br><span class="line">    bin.cov[bin.cov &gt; <span class="number">0</span>], </span><br><span class="line">    xlab=<span class="string">"log10(bin cov)"</span>, </span><br><span class="line">    main=<span class="string">"log10(Bin Cov)"</span>, </span><br><span class="line">    col=<span class="string">"lightblue"</span>, </span><br><span class="line">    xlim=c(<span class="number">0</span>, <span class="number">5</span>)</span><br><span class="line">  );</span><br><span class="line">&gt; bin.cutoff = quantile(bin.cov[bin.cov &gt; <span class="number">0</span>], <span class="number">0.95</span>);</span><br><span class="line">&gt; idy = which(bin.cov &lt;= bin.cutoff &amp; bin.cov &gt; <span class="number">0</span>);</span><br><span class="line">&gt; x.sp = x.sp[, idy, mat=<span class="string">"bmat"</span>];</span><br><span class="line">&gt; x.sp</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13565</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">534985</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-3-BinCovDist.png" width="500" height="500" /></p>
+<p>Next, we will further remove any cells of bin coverage less than 1,000. The rational behind this is that some cells may have high number of unique fragments but end up with low bin coverage after filtering. This step is optional but highly recommanded.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; idx = which(Matrix::rowSums(x.sp@bmat) &gt; <span class="number">1000</span>);</span><br><span class="line">&gt; x.sp = x.sp[idx,];</span><br><span class="line">&gt; x.sp</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13434</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">534985</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><a name="sample_landmark"></a><strong>Step 5. Dimentionality reduction</strong><br />
+SnapATAC applies diffusion maps algorithm, a nonlinear dimensionality reduction technique that discovers low-dimension manifold by performing random walk on the data and is highly robust to noise and perturbation.</p>
+<p>However, the computational cost of the diffusion maps algorithm scales exponentially with the increase of number of cells. To overcome this limitation, here we combine the Nyström method (a sampling technique) and diffusion maps to present Nyström Landmark diffusion map to generate the low-dimentional embedding for large-scale dataset.</p>
+<p>A Nyström landmark diffusion maps algorithm includes three major steps:</p>
+<ol type="1">
+<li><strong><em><em>sampling</em></em></strong>: sample a subset of K (K≪N) cells from N total cells as “landmarks”. Instead of random sampling, here we adopted a density-based sampling approach developed in SCTransform to preserve the density distribution of the N original points;</li>
+<li><strong><em><em>embedding</em></em></strong>: compute a diffusion map embedding for K landmarks;</li>
+<li><strong><em><em>extension</em></em></strong>: project the remaining N-K cells onto the low-dimensional embedding as learned from the landmarks to create a joint embedding space for all cells.</li>
+</ol>
+<p>In this example, we will sample 10,000 cells as landmarks and project the remaining query cells onto the diffusion maps embedding of landmarks.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; row.covs.dens &lt;- density(</span><br><span class="line">    x = x.sp@metaData[,<span class="string">"logUMI"</span>], </span><br><span class="line">    bw = <span class="string">'nrd'</span>, adjust = <span class="number">1</span></span><br><span class="line">  );</span><br><span class="line">&gt; sampling_prob &lt;- <span class="number">1</span> / (approx(x = row.covs.dens$x, y = row.covs.dens$y, xout = x.sp@metaData[,<span class="string">"logUMI"</span>])$y + .Machine$double.eps);</span><br><span class="line">&gt; set.seed(<span class="number">1</span>);</span><br><span class="line">&gt; idx.landmark.ds &lt;- sort(sample(x = seq(nrow(x.sp)), size = <span class="number">10000</span>, prob = sampling_prob));</span><br></pre></td></tr></table></figure>
+<p>Split the <code>x.sp</code> into landmark (<code>x.landmark.sp</code>) and query (<code>x.query.sp</code>) cells.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.landmark.sp = x.sp[idx.landmark.ds,];</span><br><span class="line">&gt; x.query.sp = x.sp[-idx.landmark.ds,];</span><br></pre></td></tr></table></figure>
+<p>Run diffusion maps on the landmark cells.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.landmark.sp = runDiffusionMaps(</span><br><span class="line">    obj= x.landmark.sp,</span><br><span class="line">    input.mat=<span class="string">"bmat"</span>, </span><br><span class="line">    num.eigs=<span class="number">50</span></span><br><span class="line">  );</span><br><span class="line">&gt; x.landmark.sp@metaData$landmark = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>Porject query cells to landmarks.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.query.sp = runDiffusionMapsExtension(</span><br><span class="line">    obj1=x.landmark.sp, </span><br><span class="line">    obj2=x.query.sp,</span><br><span class="line">    input.mat=<span class="string">"bmat"</span></span><br><span class="line">  );</span><br><span class="line">&gt; x.query.sp@metaData$landmark = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>Combine landmark and query cells.<br />
+<strong>Note</strong>: To merge snap objects, all the matrix (bmat, gmat, pmat) and metaData must be of the same number of columns between snap objects.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.sp = snapRbind(x.landmark.sp, x.query.sp);</span><br><span class="line">&gt; x.sp = x.sp[order(x.sp@metaData[,<span class="string">"sample"</span>])]; <span class="comment">#IMPORTANT</span></span><br></pre></td></tr></table></figure>
+<p><a name="pc_select"></a><strong>Step 6. Determine significant components</strong><br />
+We next determine the number of eigen-vectors to include for downstream analysis. We use an ad hoc method by simply looking at a pairwise plot and select the number of eigen vectors that the scatter plot starts looking like a blob. In the below example, we choose the first 15 eigen vectors.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; plotDimReductPW(</span><br><span class="line">    obj=x.sp, </span><br><span class="line">    eigs.dims=<span class="number">1</span>:<span class="number">50</span>,</span><br><span class="line">    point.size=<span class="number">0.3</span>,</span><br><span class="line">    point.color=<span class="string">"grey"</span>,</span><br><span class="line">    point.shape=<span class="number">19</span>,</span><br><span class="line">    point.alpha=<span class="number">0.6</span>,</span><br><span class="line">    down.sample=<span class="number">5000</span>,</span><br><span class="line">    pdf.file.name=<span class="literal">NULL</span>, </span><br><span class="line">    pdf.height=<span class="number">7</span>, </span><br><span class="line">    pdf.width=<span class="number">7</span></span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-4-eigs_scatter_plot.png" width="900" height="900" /></p>
+<p><a name="cluster"></a><strong>Step 7. Graph-based clustering</strong><br />
+Using the selected significant components, we next construct a K Nearest Neighbor (KNN) Graph. Each cell is a node and the k-nearest neighbors of each cell are identified according to the Euclidian distance and edges are draw between neighbors in the graph.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.sp = runKNN(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    eigs.dims=<span class="number">1</span>:<span class="number">20</span>,</span><br><span class="line">    k=<span class="number">15</span></span><br><span class="line">  );</span><br><span class="line">&gt; <span class="keyword">library</span>(leiden);</span><br><span class="line">&gt; x.sp=runCluster(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    tmp.folder=tempdir(),</span><br><span class="line">    louvain.lib=<span class="string">"leiden"</span>,</span><br><span class="line">    seed.use=<span class="number">10</span>,</span><br><span class="line">    resolution=<span class="number">0.7</span></span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+<p><a name="viz"></a><strong>Step 8. Visualization</strong><br />
+SnapATAC visualizes and explores the data using tSNE (FI-tsne) and UMAP. In this example, we compute the UMAP embedding.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">library</span>(umap);</span><br><span class="line">&gt; x.sp = runViz(</span><br><span class="line">    obj=x.sp, </span><br><span class="line">    tmp.folder=tempdir(),</span><br><span class="line">    dims=<span class="number">2</span>,</span><br><span class="line">    eigs.dims=<span class="number">1</span>:<span class="number">20</span>, </span><br><span class="line">    method=<span class="string">"umap"</span>,</span><br><span class="line">    seed.use=<span class="number">10</span></span><br><span class="line">  );</span><br><span class="line">&gt; par(mfrow = c(<span class="number">2</span>, <span class="number">2</span>));</span><br><span class="line">&gt; plotViz(</span><br><span class="line">    obj= x.sp,</span><br><span class="line">    method=<span class="string">"umap"</span>, </span><br><span class="line">    main=<span class="string">"Cluster"</span>,</span><br><span class="line">    point.color=x.sp@cluster, </span><br><span class="line">    point.size=<span class="number">0.2</span>, </span><br><span class="line">    point.shape=<span class="number">19</span>, </span><br><span class="line">    text.add=<span class="literal">TRUE</span>,</span><br><span class="line">    text.size=<span class="number">1</span>,</span><br><span class="line">    text.color=<span class="string">"black"</span>,</span><br><span class="line">    down.sample=<span class="number">10000</span>,</span><br><span class="line">    legend.add=<span class="literal">FALSE</span></span><br><span class="line">  );</span><br><span class="line">&gt; plotFeatureSingle(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    feature.value=x.sp@metaData[,<span class="string">"logUMI"</span>],</span><br><span class="line">    method=<span class="string">"umap"</span>, </span><br><span class="line">    main=<span class="string">"Read Depth"</span>,</span><br><span class="line">    point.size=<span class="number">0.2</span>, </span><br><span class="line">    point.shape=<span class="number">19</span>, </span><br><span class="line">    down.sample=<span class="number">10000</span>,</span><br><span class="line">    quantiles=c(<span class="number">0.01</span>, <span class="number">0.99</span>)</span><br><span class="line">  );</span><br><span class="line">&gt; plotViz(</span><br><span class="line">    obj= x.sp,</span><br><span class="line">    method=<span class="string">"umap"</span>, </span><br><span class="line">    main=<span class="string">"Sample"</span>,</span><br><span class="line">    point.size=<span class="number">0.2</span>, </span><br><span class="line">    point.shape=<span class="number">19</span>, </span><br><span class="line">    point.color=x.sp@sample, </span><br><span class="line">    text.add=<span class="literal">FALSE</span>,</span><br><span class="line">    text.size=<span class="number">1.5</span>,</span><br><span class="line">    text.color=<span class="string">"black"</span>,</span><br><span class="line">    down.sample=<span class="number">10000</span>,</span><br><span class="line">    legend.add=<span class="literal">TRUE</span></span><br><span class="line">    );</span><br><span class="line">&gt; plotViz(</span><br><span class="line">    obj= x.sp,</span><br><span class="line">    method=<span class="string">"umap"</span>, </span><br><span class="line">    main=<span class="string">"Landmark"</span>,</span><br><span class="line">    point.size=<span class="number">0.2</span>, </span><br><span class="line">    point.shape=<span class="number">19</span>, </span><br><span class="line">    point.color=x.sp@metaData[,<span class="string">"landmark"</span>], </span><br><span class="line">    text.add=<span class="literal">FALSE</span>,</span><br><span class="line">    text.size=<span class="number">1.5</span>,</span><br><span class="line">    text.color=<span class="string">"black"</span>,</span><br><span class="line">    down.sample=<span class="number">10000</span>,</span><br><span class="line">    legend.add=<span class="literal">TRUE</span></span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-5-Viz_UMAP.png" width="800" height="800" /></p>
+<p><a name="annotation"></a><strong>Step 9. scRNA-seq based annotation</strong><br />
+In this example, we will annotate the single cell ATAC-seq clusters based on corresponding scRNA-seq dataset. Seurat object for 10X PBMC single cell RNA-seq (<code>pbmc_10k_v3.rds</code>) can be downloaded <span class="exturl" data-url="aHR0cHM6Ly93d3cuZHJvcGJveC5jb20vcy8zZjNwNW54cm41YjN5NHkvcGJtY18xMGtfdjMucmRzP2RsPTE=">here<i class="fa fa-external-link-alt"></i></span>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">library</span>(Seurat);</span><br><span class="line">&gt; pbmc.rna = readRDS(<span class="string">"pbmc_10k_v3.rds"</span>);</span><br><span class="line">&gt; pbmc.rna$tech = <span class="string">"rna"</span>;</span><br><span class="line">&gt; variable.genes = VariableFeatures(object = pbmc.rna);</span><br><span class="line">&gt; genes.df = read.table(<span class="string">"gencode.v19.annotation.gene.bed"</span>);</span><br><span class="line">&gt; genes.gr = GRanges(genes.df[,<span class="number">1</span>], IRanges(genes.df[,<span class="number">2</span>], genes.df[,<span class="number">3</span>]), name=genes.df[,<span class="number">4</span>]);</span><br><span class="line">&gt; genes.sel.gr = genes.gr[which(genes.gr$name %<span class="keyword">in</span>% variable.genes)];</span><br><span class="line"><span class="comment">## reload the bmat, this is optional but highly recommanded</span></span><br><span class="line">&gt; x.sp = addBmatToSnap(x.sp);</span><br><span class="line">&gt; x.sp = createGmatFromMat(</span><br><span class="line">    obj=x.sp, </span><br><span class="line">    input.mat=<span class="string">"bmat"</span>,</span><br><span class="line">    genes=genes.sel.gr,</span><br><span class="line">    do.par=<span class="literal">TRUE</span>,</span><br><span class="line">    num.cores=<span class="number">10</span></span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+<p>We next convert the snap object to Seurat object in preparation of integration.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt; pbmc.atac &lt;- snapToSeurat(</span><br><span class="line">    obj=x.sp, </span><br><span class="line">    eigs.dims=<span class="number">1</span>:<span class="number">20</span>, </span><br><span class="line">    norm=<span class="literal">TRUE</span>,</span><br><span class="line">    scale=<span class="literal">TRUE</span></span><br><span class="line">  );</span><br><span class="line">&gt; transfer.anchors &lt;- FindTransferAnchors(</span><br><span class="line">    reference = pbmc.rna, </span><br><span class="line">    query = pbmc.atac, </span><br><span class="line">    features = variable.genes, </span><br><span class="line">    reference.assay = <span class="string">"RNA"</span>, </span><br><span class="line">    query.assay = <span class="string">"ACTIVITY"</span>, </span><br><span class="line">    reduction = <span class="string">"cca"</span></span><br><span class="line">  );</span><br><span class="line">&gt; celltype.predictions &lt;- TransferData(</span><br><span class="line">    anchorset = transfer.anchors, </span><br><span class="line">    refdata = pbmc.rna$celltype,</span><br><span class="line">    weight.reduction = pbmc.atac[[<span class="string">"SnapATAC"</span>]],</span><br><span class="line">    dims = <span class="number">1</span>:<span class="number">20</span></span><br><span class="line">  );</span><br><span class="line">&gt; x.sp@metaData$predicted.id = celltype.predictions$predicted.id;</span><br><span class="line">&gt; x.sp@metaData$predict.max.score = apply(celltype.predictions[,-<span class="number">1</span>], <span class="number">1</span>, max);</span><br><span class="line">&gt; x.sp@cluster = as.factor(x.sp@metaData$predicted.id);</span><br></pre></td></tr></table></figure>
+<p><a name="psudo_cell"></a><strong>Step 10. Create psudo multiomics cells</strong><br />
+Now each single cell in the snap object <code>x.sp</code> contains information of both chromatin accessibility <code>@bmat</code> and gene expression <code>@gmat</code>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt; refdata &lt;- GetAssayData(</span><br><span class="line">    object = pbmc.rna, </span><br><span class="line">    assay = <span class="string">"RNA"</span>, </span><br><span class="line">    slot = <span class="string">"data"</span></span><br><span class="line">  );</span><br><span class="line">&gt; imputation &lt;- TransferData(</span><br><span class="line">    anchorset = transfer.anchors, </span><br><span class="line">    refdata = refdata, </span><br><span class="line">    weight.reduction = pbmc.atac[[<span class="string">"SnapATAC"</span>]], </span><br><span class="line">    dims = <span class="number">1</span>:<span class="number">20</span></span><br><span class="line">  );</span><br><span class="line">&gt; x.sp@gmat = t(imputation@data);</span><br><span class="line">&gt; rm(imputation); <span class="comment"># free memory</span></span><br><span class="line">&gt; rm(refdata);    <span class="comment"># free memory</span></span><br><span class="line">&gt; rm(pbmc.rna);   <span class="comment"># free memory</span></span><br><span class="line">&gt; rm(pbmc.atac); <span class="comment"># free memory</span></span><br></pre></td></tr></table></figure>
+<p><a name="cell_filter"></a><strong>Step 11. Remove cells of low prediction score</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; hist(</span><br><span class="line">    x.sp@metaData$predict.max.score, </span><br><span class="line">    xlab=<span class="string">"prediction score"</span>, </span><br><span class="line">    col=<span class="string">"lightblue"</span>, </span><br><span class="line">    xlim=c(<span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">    main=<span class="string">"PBMC 10X"</span></span><br><span class="line">  );</span><br><span class="line">&gt; abline(v=<span class="number">0.5</span>, col=<span class="string">"red"</span>, lwd=<span class="number">2</span>, lty=<span class="number">2</span>);</span><br><span class="line">&gt; table(x.sp@metaData$predict.max.score &gt; <span class="number">0.5</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">## FALSE  TRUE</span><br><span class="line">##  <span class="number">331</span> <span class="number">13103</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="symbol">x</span>.sp = <span class="symbol">x</span>.sp[<span class="symbol">x</span>.sp@metaData$predict.<span class="built_in">max</span>.<span class="symbol">score</span> &gt; <span class="number">0.5</span>,];</span><br><span class="line">&gt; <span class="symbol">x</span>.sp</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13045</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">627478</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">19089</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; plotViz(</span><br><span class="line">    <span class="attribute">obj</span>=x.sp,</span><br><span class="line">    <span class="attribute">method</span>=<span class="string">"umap"</span>, </span><br><span class="line">    <span class="attribute">main</span>=<span class="string">"PBMC 10X"</span>,</span><br><span class="line">    point.<span class="attribute">color</span>=x.sp@metaData[,<span class="string">"predicted.id"</span>], </span><br><span class="line">    point.<span class="attribute">size</span>=0.5, </span><br><span class="line">    point.<span class="attribute">shape</span>=19, </span><br><span class="line">    text.<span class="attribute">add</span>=<span class="literal">TRUE</span>,</span><br><span class="line">    text.<span class="attribute">size</span>=1,</span><br><span class="line">    text.<span class="attribute">color</span>=<span class="string">"black"</span>,</span><br><span class="line">    down.<span class="attribute">sample</span>=10000,</span><br><span class="line">    legend.<span class="attribute">add</span>=<span class="literal">FALSE</span></span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-6-predict_score.png" width="350" height="350" /> <img src="http://qd5oognq8.bkt.clouddn.com/scrna3-7-Viz_umap_type.png" width="350" height="350" /></p>
+<p><a name="gene_umap"></a><strong>Step 12. Gene expression projected onto UMAP</strong><br />
+We next project the expression level of marker genes onto the the UMAP embedding.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt; marker.genes = c(</span><br><span class="line">    <span class="string">"IL32"</span>, <span class="string">"LTB"</span>, <span class="string">"CD3D"</span>,</span><br><span class="line">    <span class="string">"IL7R"</span>, <span class="string">"LDHB"</span>, <span class="string">"FCGR3A"</span>, </span><br><span class="line">    <span class="string">"CD68"</span>, <span class="string">"MS4A1"</span>, <span class="string">"GNLY"</span>, </span><br><span class="line">    <span class="string">"CD3E"</span>, <span class="string">"CD14"</span>, <span class="string">"CD14"</span>, </span><br><span class="line">    <span class="string">"FCGR3A"</span>, <span class="string">"LYZ"</span>, <span class="string">"PPBP"</span>, </span><br><span class="line">    <span class="string">"CD8A"</span>, <span class="string">"PPBP"</span>, <span class="string">"CST3"</span>, </span><br><span class="line">    <span class="string">"NKG7"</span>, <span class="string">"MS4A7"</span>, <span class="string">"MS4A1"</span>, </span><br><span class="line">    <span class="string">"CD8A"</span></span><br><span class="line">  );</span><br><span class="line">&gt; par(mfrow = c(<span class="number">3</span>, <span class="number">3</span>));</span><br><span class="line">&gt; <span class="keyword">for</span>(i <span class="keyword">in</span> <span class="number">1</span>:<span class="number">9</span>)&#123;</span><br><span class="line">    j = which(colnames(x.sp@gmat) == marker.genes[i])</span><br><span class="line">    plotFeatureSingle(</span><br><span class="line">        obj=x.sp,</span><br><span class="line">        feature.value=x.sp@gmat[,j],</span><br><span class="line">        method=<span class="string">"umap"</span>, </span><br><span class="line">        main=marker.genes[i],</span><br><span class="line">        point.size=<span class="number">0.1</span>, </span><br><span class="line">        point.shape=<span class="number">19</span>, </span><br><span class="line">        down.sample=<span class="number">10000</span>,</span><br><span class="line">        quantiles=c(<span class="number">0.01</span>, <span class="number">0.99</span>)</span><br><span class="line"> )&#125;;</span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-8-gene_exp_plot.png" width="900" height="900" /></p>
+<p><a name="peak_call"></a><strong>Step 13. Identify peaks</strong><br />
+Next we aggregate reads from the each cluster to create an ensemble track for peak calling and visualization. This step will generate a <code>narrowPeak</code> that contains the identified peak and <code>.bedGraph</code> file for visualization. To obtain the most robust result, we don't recommend to perform this step for clusters with cell number less than 100. In the below example, SnapATAC creates <code>PBMC.CD4_Naive_peaks.narrowPeak</code> and <code>PBMC.CD4_Naive_treat_pileup.bdg</code>. <code>bdg</code> file can be compressed to <code>bigWig</code> file using <a href="https://anaconda.org/bioconda/ucsc-bedgraphtobigwig" target="_blank" rel="noopener"><code>bedGraphToBigWig</code></a> for IGV or Genome Browser visulization.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt; system(<span class="string">"which snaptools"</span>);</span><br><span class="line">/home/r3fang/anaconda2/bin/snaptools</span><br><span class="line">&gt; system(<span class="string">"which macs2"</span>);</span><br><span class="line">/home/r3fang/anaconda2/bin/macs2</span><br><span class="line">&gt; peaks = runMACS(</span><br><span class="line">	obj=x.sp[which(x.sp@cluster==<span class="string">"CD4 Naive"</span>),], </span><br><span class="line">	output.prefix=<span class="string">"PBMC.CD4_Naive"</span>,</span><br><span class="line">	path.to.snaptools=<span class="string">"/home/r3fang/anaconda2/bin/snaptools"</span>,</span><br><span class="line">	path.to.macs=<span class="string">"/home/r3fang/anaconda2/bin/macs2"</span>,</span><br><span class="line">	gsize=<span class="string">"hs"</span>, <span class="comment"># mm, hs, etc</span></span><br><span class="line">	buffer.size=<span class="number">500</span>, </span><br><span class="line">	num.cores=<span class="number">10</span>,</span><br><span class="line">	macs.options=<span class="string">"--nomodel --shift 100 --ext 200 --qval 5e-2 -B --SPMR"</span>,</span><br><span class="line">	tmp.folder=tempdir()</span><br><span class="line">	);</span><br></pre></td></tr></table></figure>
+<p>Instead of performing peak calling for only one cluster, we provide a short script that perform this step for all clusters.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># call peaks for all cluster with more than 100 cells</span></span><br><span class="line">&gt; clusters.sel = names(table(x.sp@cluster))[which(table(x.sp@cluster) &gt; <span class="number">100</span>)];</span><br><span class="line">&gt; peaks.ls = mclapply(seq(clusters.sel), <span class="keyword">function</span>(i)&#123;</span><br><span class="line">    print(clusters.sel[i]);</span><br><span class="line">    peaks = runMACS(</span><br><span class="line">        obj=x.sp[which(x.sp@cluster==clusters.sel[i]),], </span><br><span class="line">        output.prefix=paste0(<span class="string">"PBMC."</span>, gsub(<span class="string">" "</span>, <span class="string">"_"</span>, clusters.sel)[i]),</span><br><span class="line">        path.to.snaptools=<span class="string">"/home/r3fang/anaconda2/bin/snaptools"</span>,</span><br><span class="line">        path.to.macs=<span class="string">"/home/r3fang/anaconda2/bin/macs2"</span>,</span><br><span class="line">        gsize=<span class="string">"hs"</span>, <span class="comment"># mm, hs, etc</span></span><br><span class="line">        buffer.size=<span class="number">500</span>, </span><br><span class="line">        num.cores=<span class="number">1</span>,</span><br><span class="line">        macs.options=<span class="string">"--nomodel --shift 100 --ext 200 --qval 5e-2 -B --SPMR"</span>,</span><br><span class="line">        tmp.folder=tempdir()</span><br><span class="line">   );</span><br><span class="line">	peaks</span><br><span class="line"> 	&#125;, mc.cores=<span class="number">5</span>);</span><br><span class="line">&gt; peaks.names = system(<span class="string">"ls | grep narrowPeak"</span>, intern=<span class="literal">TRUE</span>);</span><br><span class="line">&gt; peak.gr.ls = lapply(peaks.names, <span class="keyword">function</span>(x)&#123;</span><br><span class="line">    peak.df = read.table(x)</span><br><span class="line">    GRanges(peak.df[,<span class="number">1</span>], IRanges(peak.df[,<span class="number">2</span>], peak.df[,<span class="number">3</span>]))</span><br><span class="line">  &#125;)</span><br><span class="line">&gt; peak.gr = reduce(Reduce(c, peak.gr.ls));</span><br></pre></td></tr></table></figure>
+<p>This will create a <code>bdg</code> file for each cluster for visilizations using IGV or other genomic browsers such as UW genome browser. Below is a screenshot of regions flanking FOXJ2 gene from UW genome browser.</p>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-9-IG_track.png" width="900" height="350" /></p>
+<p><a name="add_pmat"></a><strong>Step 14. Create a cell-by-peak matrix</strong><br />
+Using merged peaks as a reference, we next create the cell-by-peak matrix and add it to the snap object. We will first write down combined peak list as <code>peaks.combined.bed</code>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; peaks.df = as.data.frame(peak.gr)[,<span class="number">1</span>:<span class="number">3</span>];</span><br><span class="line">&gt; write.table(peaks.df,file = <span class="string">"peaks.combined.bed"</span>,append=<span class="literal">FALSE</span>,</span><br><span class="line">		quote= <span class="literal">FALSE</span>,sep=<span class="string">"\t"</span>, eol = <span class="string">"\n"</span>, na = <span class="string">"NA"</span>, dec = <span class="string">"."</span>, </span><br><span class="line">		row.names = <span class="literal">FALSE</span>, col.names = <span class="literal">FALSE</span>, qmethod = c(<span class="string">"escape"</span>, <span class="string">"double"</span>),</span><br><span class="line">		fileEncoding = <span class="string">""</span>)</span><br></pre></td></tr></table></figure>
+<p>Next we create cell-by-peak matrix and add to the snap file. This step will take a while.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ snaptools snap-add-pmat \</span><br><span class="line">	--snap-file atac_pbmc_10k_nextgem.snap \</span><br><span class="line">	--peak-file peaks.combined.bed &amp;</span><br><span class="line">$ snaptools snap-add-pmat \</span><br><span class="line">	--snap-file atac_pbmc_5k_nextgem.snap \</span><br><span class="line">	--peak-file peaks.combined.bed</span><br></pre></td></tr></table></figure>
+<p>We then add the cell-by-peak matrix to the existing snap object in R.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; x.sp = addPmatToSnap(x.sp);</span><br></pre></td></tr></table></figure>
+<p><a name="diff_analysis"></a><strong>Step 15. Identify differentially accessible peaks</strong><br />
+For a given group of cells Ci, we first look for their neighboring cells Cj (|Ci|=|Cj|) in the diffusion component space as “background” cells to compare to. If Ci accounts for more than half of the total cells, we use the remaining cells as local background. Next, we aggregate Ci and Cj to create two raw-count vectors as Vci and Vcj. We then perform differential analysis between Vci and Vcj using exact test as implemented in R package edgeR (v3.18.1) with BCV=0.1 for mouse and 0.4 for human. P-value is then adjusted into False Discovery Rate (FDR) using Benjamini-Hochberg correction. Peaks with FDR less than 0.05 are selected as significant DARs.</p>
+<p>We recognize the limitation of this approach is that the statically significance may be under power for small clusters. For clusters that failed to identify significant differential elements, we rank the elements based on the enrichment pvalue and pick the top 2,000 peaks a representative elements for motif analysis.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&gt; DARs = findDAR(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    input.mat=<span class="string">"pmat"</span>,</span><br><span class="line">    cluster.pos=<span class="string">"CD14+ Monocytes"</span>,</span><br><span class="line">    cluster.neg.method=<span class="string">"knn"</span>,</span><br><span class="line">    test.method=<span class="string">"exactTest"</span>,</span><br><span class="line">    bcv=<span class="number">0.4</span>, <span class="comment">#0.4 for human, 0.1 for mouse</span></span><br><span class="line">    seed.use=<span class="number">10</span></span><br><span class="line">  );</span><br><span class="line">&gt; DARs$FDR = p.adjust(DARs$PValue, method=<span class="string">"BH"</span>);</span><br><span class="line">&gt; idy = which(DARs$FDR &lt; <span class="number">5e-2</span> &amp; DARs$logFC &gt; <span class="number">0</span>);</span><br><span class="line">&gt; par(mfrow = c(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">&gt; plot(DARs$logCPM, DARs$logFC, </span><br><span class="line">    pch=<span class="number">19</span>, cex=<span class="number">0.1</span>, col=<span class="string">"grey"</span>, </span><br><span class="line">    ylab=<span class="string">"logFC"</span>, xlab=<span class="string">"logCPM"</span>,</span><br><span class="line">    main=<span class="string">"CD14+ Monocytes"</span></span><br><span class="line">  );</span><br><span class="line">&gt; points(DARs$logCPM[idy], </span><br><span class="line">    DARs$logFC[idy], </span><br><span class="line">    pch=<span class="number">19</span>, </span><br><span class="line">    cex=<span class="number">0.5</span>, </span><br><span class="line">    col=<span class="string">"red"</span></span><br><span class="line">  );</span><br><span class="line">&gt; abline(h = <span class="number">0</span>, lwd=<span class="number">1</span>, lty=<span class="number">2</span>);</span><br><span class="line">&gt; covs = Matrix::rowSums(x.sp@pmat);</span><br><span class="line">&gt; vals = Matrix::rowSums(x.sp@pmat[,idy]) / covs;</span><br><span class="line">&gt; vals.zscore = (vals - mean(vals)) / sd(vals);</span><br><span class="line">&gt; plotFeatureSingle(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    feature.value=vals.zscore,</span><br><span class="line">    method=<span class="string">"umap"</span>, </span><br><span class="line">    main=<span class="string">"CD14+ Monocytes"</span>,</span><br><span class="line">    point.size=<span class="number">0.1</span>, </span><br><span class="line">    point.shape=<span class="number">19</span>, </span><br><span class="line">    down.sample=<span class="number">5000</span>,</span><br><span class="line">    quantiles=c(<span class="number">0.01</span>, <span class="number">0.99</span>)</span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+<p><a name="chromVAR"></a><strong>Step 16. Motif variability analysis</strong><br />
+SnapATAC incorporates chromVAR (Schep et al) for motif variability analysis.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">library</span>(chromVAR);</span><br><span class="line">&gt; <span class="keyword">library</span>(motifmatchr);</span><br><span class="line">&gt; <span class="keyword">library</span>(SummarizedExperiment);</span><br><span class="line">&gt; <span class="keyword">library</span>(BSgenome.Hsapiens.UCSC.hg19);</span><br><span class="line">&gt; x.sp = makeBinary(x.sp, <span class="string">"pmat"</span>);</span><br><span class="line">&gt; x.sp@mmat = runChromVAR(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    input.mat=<span class="string">"pmat"</span>,</span><br><span class="line">    genome=BSgenome.Hsapiens.UCSC.hg19,</span><br><span class="line">    min.count=<span class="number">10</span>,</span><br><span class="line">    species=<span class="string">"Homo sapiens"</span></span><br><span class="line">  );</span><br><span class="line">&gt; x.sp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## number <span class="keyword">of</span> barcodes: <span class="number">13103</span></span><br><span class="line">## number <span class="keyword">of</span> bins: <span class="number">627478</span></span><br><span class="line">## number <span class="keyword">of</span> genes: <span class="number">19089</span></span><br><span class="line">## number <span class="keyword">of</span> peaks: <span class="number">157750</span></span><br><span class="line">## number <span class="keyword">of</span> motifs: <span class="number">271</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; motif_i = <span class="string">"MA0071.1_RORA"</span>;</span><br><span class="line">&gt; dat = data.frame(x=x.sp@metaData$predicted.id, y=x.sp@mmat[,motif_i]);</span><br><span class="line">&gt; p &lt;- ggplot(dat, aes(x=x, y=y, fill=x)) + </span><br><span class="line">	theme_classic() +</span><br><span class="line">	geom_violin() + </span><br><span class="line">	xlab(<span class="string">"cluster"</span>) +</span><br><span class="line">	ylab(<span class="string">"motif enrichment"</span>) + </span><br><span class="line">	ggtitle(<span class="string">"MA0071.1_RORA"</span>) +</span><br><span class="line">	theme(</span><br><span class="line">		  plot.margin = margin(<span class="number">5</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">1</span>, <span class="string">"cm"</span>),</span><br><span class="line">		  axis.text.x = element_text(angle = <span class="number">90</span>, hjust = <span class="number">1</span>),</span><br><span class="line">		  axis.ticks.x=element_blank(),</span><br><span class="line">		  legend.position = <span class="string">"none"</span></span><br><span class="line">   );</span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-10-motif_var_plot.png" width="700" height="350" /></p>
+<p><a name="homer"></a><strong>Step 17. De novo motif discovery</strong><br />
+SnapATAC can help identify master regulators that are enriched in the differentially accessible regions (DARs). This will creates a homer motif report <code>knownResults.html</code> in the folder <code>./homer/C2</code>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&gt; system(<span class="string">"which findMotifsGenome.pl"</span>);</span><br><span class="line">/projects/ps-renlab/r3fang/public_html/softwares/homer/bin/findMotifsGenome.pl</span><br><span class="line">&gt; DARs = findDAR(</span><br><span class="line">    obj=x.sp,</span><br><span class="line">    input.mat=<span class="string">"pmat"</span>,</span><br><span class="line">    cluster.pos=<span class="string">"Double negative T cell"</span>,</span><br><span class="line">    cluster.neg.method=<span class="string">"knn"</span>,</span><br><span class="line">    test.method=<span class="string">"exactTest"</span>,</span><br><span class="line">    bcv=<span class="number">0.4</span>, <span class="comment">#0.4 for human, 0.1 for mouse</span></span><br><span class="line">    seed.use=<span class="number">10</span></span><br><span class="line">  );</span><br><span class="line">&gt; DARs$FDR = p.adjust(DARs$PValue, method=<span class="string">"BH"</span>);</span><br><span class="line">&gt; idy = which(DARs$FDR &lt; <span class="number">5e-2</span> &amp; DARs$logFC &gt; <span class="number">0</span>);</span><br><span class="line">&gt; motifs = runHomer(</span><br><span class="line">	x.sp[,idy,<span class="string">"pmat"</span>], </span><br><span class="line">	mat = <span class="string">"pmat"</span>,</span><br><span class="line">	path.to.homer = <span class="string">"/projects/ps-renlab/r3fang/public_html/softwares/homer/bin/findMotifsGenome.pl"</span>,</span><br><span class="line">	result.dir = <span class="string">"./homer/DoubleNegativeTcell"</span>,</span><br><span class="line">	num.cores=<span class="number">5</span>,</span><br><span class="line">	genome = <span class="string">'hg19'</span>,</span><br><span class="line">	motif.length = <span class="number">10</span>,</span><br><span class="line">	scan.size = <span class="number">300</span>,</span><br><span class="line">	optimize.count = <span class="number">2</span>,</span><br><span class="line">	background = <span class="string">'automatic'</span>,</span><br><span class="line">	local.background = <span class="literal">FALSE</span>,</span><br><span class="line">	only.known = <span class="literal">TRUE</span>,</span><br><span class="line">	only.denovo = <span class="literal">FALSE</span>,</span><br><span class="line">	fdr.num = <span class="number">5</span>,</span><br><span class="line">	cache = <span class="number">100</span>,</span><br><span class="line">	overwrite = <span class="literal">TRUE</span>,</span><br><span class="line">	keep.minimal = <span class="literal">FALSE</span></span><br><span class="line">	);</span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-11-motif_homer_plot.png" width="700" height="200" /></p>
+<p><a name="gene_peak_pair"></a><strong>Step 18. Predict gene-enhancer pairs</strong><br />
+Finally, using the &quot;pseudo&quot; cells, we next develop a method to link the distal regulatory elements to the target genes based on the association between expression of a gene and chromatin accessibility at its distal elements in single cells. For a given marker gene, we first identify peaks within a flanking window the target gene. For each flanking peak, we perform logistic regression using gene expression as input varaible to predict the binarized chromatin state. The resulting model estimates the significance of the association between chromatin accessibility and gene expression.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&gt; TSS.loci = GRanges(<span class="string">"chr12"</span>, IRanges(<span class="number">8219067</span>, <span class="number">8219068</span>));</span><br><span class="line">&gt; pairs = predictGenePeakPair(</span><br><span class="line">	x.sp, </span><br><span class="line">	input.mat=<span class="string">"pmat"</span>,</span><br><span class="line">	gene.name=<span class="string">"C3AR1"</span>, </span><br><span class="line">	gene.loci=resize(TSS.loci, width=<span class="number">500000</span>, fix=<span class="string">"center"</span>),</span><br><span class="line">	do.par=<span class="literal">FALSE</span></span><br><span class="line">	);</span><br><span class="line"><span class="comment"># convert the pair to genome browser arc plot format</span></span><br><span class="line">&gt; pairs.df = as.data.frame(pairs);</span><br><span class="line">&gt; pairs.df = data.frame(</span><br><span class="line">	chr1=pairs.df[,<span class="string">"seqnames"</span>],</span><br><span class="line">	start1=pairs.df[,<span class="string">"start"</span>],</span><br><span class="line">	end1=pairs.df[,<span class="string">"end"</span>],</span><br><span class="line">	chr2=<span class="string">"chr2"</span>,</span><br><span class="line">	start2=<span class="number">8219067</span>,</span><br><span class="line">	end2=<span class="number">8219068</span>,</span><br><span class="line">	Pval=pairs.df[,<span class="string">"logPval"</span>]</span><br><span class="line">	);</span><br><span class="line">&gt; head(pairs.df)</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">##    chr1  start1    end1 chr2  start2    end2       Pval</span><br><span class="line">## <span class="number">1</span> chr12 <span class="number">7984734</span> <span class="number">7985229</span> chr2 <span class="number">8219067</span> <span class="number">8219068</span> <span class="number">14.6075918</span></span><br><span class="line">## <span class="number">2</span> chr12 <span class="number">7987561</span> <span class="number">7988085</span> chr2 <span class="number">8219067</span> <span class="number">8219068</span>  <span class="number">5.6718381</span></span><br><span class="line">## <span class="number">3</span> chr12 <span class="number">7989776</span> <span class="number">7990567</span> chr2 <span class="number">8219067</span> <span class="number">8219068</span> <span class="number">24.2564608</span></span><br><span class="line">## <span class="number">4</span> chr12 <span class="number">7996454</span> <span class="number">7996667</span> chr2 <span class="number">8219067</span> <span class="number">8219068</span>  <span class="number">0.6411017</span></span><br><span class="line">## <span class="number">5</span> chr12 <span class="number">8000059</span> <span class="number">8000667</span> chr2 <span class="number">8219067</span> <span class="number">8219068</span>  <span class="number">2.0324922</span></span><br><span class="line">## <span class="number">6</span> chr12 <span class="number">8012404</span> <span class="number">8013040</span> chr2 <span class="number">8219067</span> <span class="number">8219068</span>  <span class="number">0.0000000</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://qd5oognq8.bkt.clouddn.com/scrna3-12-arc_plot.png" width="900" height="450" /></p>
+
+    </div>
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #555;font-size:14px;">-------------The End-------------</div>
+    
+</div>
+
+  
+</div>
+        <div class="reward-container">
+  <div>Buy Me A Coffee</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Geng Lee WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Geng Lee Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div>
+            
+             <div>
+    
+        <center><!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="addthis_inline_share_toolbox_ew9r"></div></center>
+    
+</div>
+
+            
+          </div>
+          <div class="post-tags">
+              <a href="/tags/R/" rel="tag"><i class="fa fa-tag"></i> R</a>
+              <a href="/tags/ATAC/" rel="tag"><i class="fa fa-tag"></i> ATAC</a>
+              <a href="/tags/scRNA-seq/" rel="tag"><i class="fa fa-tag"></i> scRNA-seq</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/34331839/" rel="prev" title="Analysis of single-cell ATAC-seq data using SnapATAC software (2)：10x Adult Mouse Brain">
+      <i class="fa fa-chevron-left"></i> Analysis of single-cell ATAC-seq data using SnapATAC software (2)：10x Adult Mouse Brain
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+  
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#integrative-analysis-of-pbmc-scatac-seq-and-scrna-seq"><span class="nav-number">1.1.</span> <span class="nav-text">Integrative Analysis of PBMC scATAC-seq and scRNA-seq</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#analysis-content"><span class="nav-number">2.</span> <span class="nav-text">Analysis content</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#table-of-contents"><span class="nav-number">2.1.</span> <span class="nav-text">Table of Contents</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Geng Lee"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Geng Lee</p>
+  <div class="site-description" itemprop="description">😏 To be a better me</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2dlbmctbGVl" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;geng-lee"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cuZmFjZWJvb2suY29tL3Byb2ZpbGUucGhwP2lkPTEwMDAxMTQxODkzNDg5Mg==" title="Facebook → https:&#x2F;&#x2F;www.facebook.com&#x2F;profile.php?id&#x3D;100011418934892"><i class="fab fa-facebook fa-fw"></i>Facebook</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOjI3MTY1ODE4NTJAcXEuY29t" title="E-Mail → mailto:2716581852@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vdS81MDgwNDg1MzEw" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;5080485310"><i class="fab fa-weibo fa-fw"></i>Weibo</span>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-coffee fa-fw"></i>
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <span class="exturl" data-url="aHR0cHM6Ly93d3cuYnV5bWVhY29mZmVlLmNvbS9HZW5nTGVl" title="https:&#x2F;&#x2F;www.buymeacoffee.com&#x2F;GengLee">Buy Me A Coffee</span>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Geng Lee</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">64k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">58 mins.</span>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eef5a9cd125218a" async="async"></script>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '02ff9c675de13b9fbbbb',
+      clientSecret: 'f56e4a1eb98b4f3dfde62cca3ec7c19f9fd6a016',
+      repo        : 'gitalk-comments',
+      owner       : 'geng-lee',
+      admin       : ['geng-lee'],
+      id          : '4109435a3c378ff5204858fae1a740f9',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
