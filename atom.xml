@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-07-31T06:10:49.375Z</updated>
+  <updated>2020-08-02T15:53:06.106Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://geng-lee.github.io/posts/1b8fd861/"/>
     <id>https://geng-lee.github.io/posts/1b8fd861/</id>
     <published>2020-07-02T00:00:05.000Z</published>
-    <updated>2020-07-31T06:10:49.375Z</updated>
+    <updated>2020-08-02T15:53:06.106Z</updated>
     
     <summary type="html">
     
@@ -48,9 +48,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
-    
       <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
+    
+      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
     
   </entry>
   
@@ -59,7 +59,7 @@
     <link href="https://geng-lee.github.io/posts/34331839/"/>
     <id>https://geng-lee.github.io/posts/34331839/</id>
     <published>2020-06-25T01:05:25.000Z</published>
-    <updated>2020-07-31T06:16:28.713Z</updated>
+    <updated>2020-08-02T15:29:07.457Z</updated>
     
     <summary type="html">
     
@@ -78,9 +78,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
-    
       <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
+    
+      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
     
   </entry>
   
@@ -165,9 +165,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
-    
       <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
+    
+      <category term="scRNA" scheme="https://geng-lee.github.io/tags/scRNA/"/>
     
   </entry>
   
@@ -176,7 +176,7 @@
     <link href="https://geng-lee.github.io/posts/4a17b156/"/>
     <id>https://geng-lee.github.io/posts/4a17b156/</id>
     <published>2020-06-16T14:12:55.826Z</published>
-    <updated>2020-07-30T14:59:41.293Z</updated>
+    <updated>2020-08-02T14:48:40.751Z</updated>
     
     <summary type="html">
     
