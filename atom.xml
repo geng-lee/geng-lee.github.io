@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-08-10T09:50:22.304Z</updated>
+  <updated>2020-12-04T02:21:04.755Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Analysis of scRNA-seq data (01) Introduction to single-cell RNA-seq</title>
+    <link href="https://geng-lee.github.io/posts/dcece525/"/>
+    <id>https://geng-lee.github.io/posts/dcece525/</id>
+    <published>2020-12-04T01:29:35.000Z</published>
+    <updated>2020-12-04T02:21:04.755Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;single-cell-rna-seq&quot;&gt;Single-cell RNA-seq&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;why-single-cell-rna-seq&quot;&gt;Why single-cell RNA-seq&lt;/h2&gt;
+&lt;p&gt;Across human tissues there is an incredible diversity of cell types, states, and interactions. To better understand these tissues and the cell types present, single-cell RNA-seq (scRNA-seq) offers a glimpse into what genes are being expressed at the level of individual cells.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="scRNA" scheme="https://geng-lee.github.io/categories/scRNA/"/>
+    
+    
+      <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
+    
+      <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
+    
+  </entry>
   
   <entry>
     <title>The quest to decipher how the body’s cells sense touch</title>
@@ -72,9 +100,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
-    
       <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
+    
+      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
     
   </entry>
   

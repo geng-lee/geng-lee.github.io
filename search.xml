@@ -21,6 +21,38 @@
       </categories>
   </entry>
   <entry>
+    <title>Analysis of scRNA-seq data (01) Introduction to single-cell RNA-seq</title>
+    <url>/posts/dcece525/</url>
+    <content><![CDATA[<h1 id="single-cell-rna-seq">Single-cell RNA-seq</h1>
+<hr />
+<div class="note info no-icon"><h2 id="why-single-cell-rna-seq">Why single-cell RNA-seq</h2>
+<p>Across human tissues there is an incredible diversity of cell types, states, and interactions. To better understand these tissues and the cell types present, single-cell RNA-seq (scRNA-seq) offers a glimpse into what genes are being expressed at the level of individual cells.</p>
+</div>
+<p><br></p>
+<a id="more"></a>
+<p align="center">
+<img src="https://cdn.jsdelivr.net/gh/geng-lee/ImageHosting/img/scRNA-seq_cell_diversity.png" width="600">
+</p>
+<p><em><strong>Image credit:</strong> courtesy of Dr. Ayshwarya Subramanian</em></p>
+<p>This exciting and cutting-edge method can be used to:</p>
+<ul>
+<li>explore which cell types are present in a tissue</li>
+<li>identify unknown/rare cell types or states</li>
+<li>elucidate the changes in gene expression during differentiation processes or across time or states</li>
+<li>identify genes that are differentially expressed in particular cell types between conditions (e.g. treatment or disease)</li>
+<li>explore changes in expression among a cell type while incorporating spatial, regulatory, and/or protein information</li>
+</ul>
+<hr />
+]]></content>
+      <categories>
+        <category>scRNA</category>
+      </categories>
+      <tags>
+        <tag>R</tag>
+        <tag>scRNA-seq</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>The quest to decipher how the body’s cells sense touch</title>
     <url>/posts/b6175301/</url>
     <content><![CDATA[<div class="note info no-icon"><p>From a painful pinch to a soft caress, scientists are zooming in on the pressure-sensitive proteins that allow cells to detect tension and pressure.</p>
@@ -231,8 +263,8 @@ Finally, using the "pseudo" cells, we next develop a method to link the distal r
       </categories>
       <tags>
         <tag>R</tag>
-        <tag>ATAC</tag>
         <tag>scRNA-seq</tag>
+        <tag>ATAC</tag>
       </tags>
   </entry>
   <entry>
