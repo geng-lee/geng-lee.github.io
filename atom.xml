@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-12-04T02:21:04.755Z</updated>
+  <updated>2020-12-04T04:55:26.283Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Engineered antibodies to combat viral threats</title>
+    <link href="https://geng-lee.github.io/posts/859c9dbf/"/>
+    <id>https://geng-lee.github.io/posts/859c9dbf/</id>
+    <published>2020-12-04T04:35:22.000Z</published>
+    <updated>2020-12-04T04:55:26.283Z</updated>
+    
+    <summary type="html">
+    
+      &lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;As the COVID-19 pandemic rages globally, interest in antiviral treatments has never been higher. Antibodies are key defence components, and engineering them to better exploit their natural functions might boost therapeutic options.&lt;/p&gt;
+&lt;/div&gt;
+    
+    </summary>
+    
+    
+      <category term="Immunology" scheme="https://geng-lee.github.io/categories/Immunology/"/>
+    
+    
+      <category term="COVID-19" scheme="https://geng-lee.github.io/tags/COVID-19/"/>
+    
+      <category term="Immunology" scheme="https://geng-lee.github.io/tags/Immunology/"/>
+    
+      <category term="FcγRs" scheme="https://geng-lee.github.io/tags/Fc%CE%B3Rs/"/>
+    
+      <category term="antibody" scheme="https://geng-lee.github.io/tags/antibody/"/>
+    
+  </entry>
   
   <entry>
     <title>Analysis of scRNA-seq data (01) Introduction to single-cell RNA-seq</title>
@@ -100,9 +128,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
-    
       <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
+    
+      <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
     
   </entry>
   
