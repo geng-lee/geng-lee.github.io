@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2021-11-23T12:48:48.502Z</updated>
+  <updated>2020-12-04T04:55:26.000Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -15,26 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>test</title>
-    <link href="https://geng-lee.github.io/posts/d87f7e0c/"/>
-    <id>https://geng-lee.github.io/posts/d87f7e0c/</id>
-    <published>2021-11-23T12:44:57.000Z</published>
-    <updated>2021-11-23T12:48:48.502Z</updated>
-    
-    <summary type="html">
-    
-      &lt;center&gt;&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;&lt;/center&gt;
-&lt;hr /&gt;
-    
-    </summary>
-    
-    
-      <category term="uncategorized" scheme="https://geng-lee.github.io/categories/uncategorized/"/>
-    
-    
-  </entry>
   
   <entry>
     <title>Engineered antibodies to combat viral threats</title>
