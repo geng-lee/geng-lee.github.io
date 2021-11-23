@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://geng-lee.github.io/"/>
-  <updated>2020-12-04T04:55:26.283Z</updated>
+  <updated>2021-11-23T12:48:48.502Z</updated>
   <id>https://geng-lee.github.io/</id>
   
   <author>
@@ -17,11 +17,31 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>test</title>
+    <link href="https://geng-lee.github.io/posts/d87f7e0c/"/>
+    <id>https://geng-lee.github.io/posts/d87f7e0c/</id>
+    <published>2021-11-23T12:44:57.000Z</published>
+    <updated>2021-11-23T12:48:48.502Z</updated>
+    
+    <summary type="html">
+    
+      &lt;center&gt;&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;&lt;/center&gt;
+&lt;hr /&gt;
+    
+    </summary>
+    
+    
+      <category term="uncategorized" scheme="https://geng-lee.github.io/categories/uncategorized/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Engineered antibodies to combat viral threats</title>
     <link href="https://geng-lee.github.io/posts/859c9dbf/"/>
     <id>https://geng-lee.github.io/posts/859c9dbf/</id>
     <published>2020-12-04T04:35:22.000Z</published>
-    <updated>2020-12-04T04:55:26.283Z</updated>
+    <updated>2020-12-04T04:55:26.000Z</updated>
     
     <summary type="html">
     
@@ -49,16 +69,16 @@
     <link href="https://geng-lee.github.io/posts/dcece525/"/>
     <id>https://geng-lee.github.io/posts/dcece525/</id>
     <published>2020-12-04T01:29:35.000Z</published>
-    <updated>2020-12-04T02:21:04.755Z</updated>
+    <updated>2020-12-04T02:21:04.000Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;single-cell-rna-seq&quot;&gt;Single-cell RNA-seq&lt;/h1&gt;
+      &lt;h1 id=&quot;single-cell-rna-seq&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#single-cell-rna-seq&quot;&gt;&lt;/a&gt; Single-cell RNA-seq&lt;/h1&gt;
 &lt;hr /&gt;
-&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;why-single-cell-rna-seq&quot;&gt;Why single-cell RNA-seq&lt;/h2&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;why-single-cell-rna-seq&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#why-single-cell-rna-seq&quot;&gt;&lt;/a&gt; Why single-cell RNA-seq&lt;/h2&gt;
 &lt;p&gt;Across human tissues there is an incredible diversity of cell types, states, and interactions. To better understand these tissues and the cell types present, single-cell RNA-seq (scRNA-seq) offers a glimpse into what genes are being expressed at the level of individual cells.&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;br&gt;
     
     </summary>
     
@@ -77,7 +97,7 @@
     <link href="https://geng-lee.github.io/posts/b6175301/"/>
     <id>https://geng-lee.github.io/posts/b6175301/</id>
     <published>2020-08-10T08:06:49.000Z</published>
-    <updated>2020-08-10T09:50:22.304Z</updated>
+    <updated>2020-08-10T09:50:22.000Z</updated>
     
     <summary type="html">
     
@@ -101,15 +121,17 @@
     <link href="https://geng-lee.github.io/posts/1b8fd861/"/>
     <id>https://geng-lee.github.io/posts/1b8fd861/</id>
     <published>2020-07-02T00:00:05.000Z</published>
-    <updated>2020-08-02T15:53:06.106Z</updated>
+    <updated>2020-08-02T15:53:06.000Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+      &lt;h1 id=&quot;introduction&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#introduction&quot;&gt;&lt;/a&gt; Introduction&lt;/h1&gt;
 &lt;hr /&gt;
-&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;integrative-analysis-of-pbmc-scatac-seq-and-scrna-seq&quot;&gt;Integrative Analysis of PBMC scATAC-seq and scRNA-seq&lt;/h2&gt;
-&lt;p&gt;In this example, we will be analyzing two scATAC-seq datasets (5K and 10K) and one scRNA-seq dataset from PBMC. All three datasets are freely available from 10X genomics. &lt;br&gt; In detail, we will be performing the following analysis:&lt;/p&gt;
-&lt;ol type=&quot;1&quot;&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;integrative-analysis-of-pbmc-scatac-seq-and-scrna-seq&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#integrative-analysis-of-pbmc-scatac-seq-and-scrna-seq&quot;&gt;&lt;/a&gt; Integrative Analysis of PBMC scATAC-seq and scRNA-seq&lt;/h2&gt;
+&lt;p&gt;In this example, we will be analyzing two scATAC-seq datasets (5K and 10K) and one scRNA-seq dataset from PBMC. All three datasets are freely available from 10X genomics.&lt;br /&gt;
+&lt;br&gt;&lt;br /&gt;
+In detail, we will be performing the following analysis:&lt;/p&gt;
+&lt;ol&gt;
 &lt;li&gt;Cell selection for PBMC 5k and 10k scATAC;&lt;/li&gt;
 &lt;li&gt;Randomly sample 10,000 cells as landmarks;&lt;/li&gt;
 &lt;li&gt;Unsupervised clustering of landmarks;&lt;/li&gt;
@@ -118,7 +140,7 @@
 &lt;li&gt;Downstream analysis including peak calling, differential analysis, prediction of gene-enhancer pairing.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;br&gt;
     
     </summary>
     
@@ -128,9 +150,9 @@
     
       <category term="R" scheme="https://geng-lee.github.io/tags/R/"/>
     
-      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
-    
       <category term="scRNA-seq" scheme="https://geng-lee.github.io/tags/scRNA-seq/"/>
+    
+      <category term="ATAC" scheme="https://geng-lee.github.io/tags/ATAC/"/>
     
   </entry>
   
@@ -139,16 +161,16 @@
     <link href="https://geng-lee.github.io/posts/34331839/"/>
     <id>https://geng-lee.github.io/posts/34331839/</id>
     <published>2020-06-25T01:05:25.000Z</published>
-    <updated>2020-08-02T15:29:07.457Z</updated>
+    <updated>2020-08-02T15:29:07.000Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+      &lt;h1 id=&quot;introduction&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#introduction&quot;&gt;&lt;/a&gt; Introduction&lt;/h1&gt;
 &lt;hr /&gt;
-&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;x-adult-mouse-brain&quot;&gt;10X Adult Mouse Brain&lt;/h2&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;h2 id=&quot;10x-adult-mouse-brain&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#10x-adult-mouse-brain&quot;&gt;&lt;/a&gt; 10X Adult Mouse Brain&lt;/h2&gt;
 &lt;p&gt;In this example, we will be analyzing a dataset of 5K cells from the adult mouse brain available from 10X genomics.&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;br&gt;
     
     </summary>
     
@@ -169,15 +191,16 @@
     <link href="https://geng-lee.github.io/posts/539d6d7a/"/>
     <id>https://geng-lee.github.io/posts/539d6d7a/</id>
     <published>2020-06-20T07:18:07.000Z</published>
-    <updated>2020-07-31T05:33:50.123Z</updated>
+    <updated>2020-07-31T05:33:50.000Z</updated>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;the-concept-and-meaning-of-kaks&quot;&gt;The concept and meaning of Ka,Ks&lt;/h2&gt;
+      &lt;h2 id=&quot;the-concept-and-meaning-of-kaks&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#the-concept-and-meaning-of-kaks&quot;&gt;&lt;/a&gt; The concept and meaning of Ka,Ks&lt;/h2&gt;
 &lt;hr /&gt;
-&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Ks (synonymous substitutions): A base mutation in a codon does not change the amino acid encoded by the codon. Ka (nonsynonymous substitutions): A base mutation in a codon changes the amino acid encoded by that codon.&lt;/p&gt;
+&lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Ks (synonymous substitutions): A base mutation in a codon does not change the amino acid encoded by the codon.&lt;br /&gt;
+Ka (nonsynonymous substitutions): A base mutation in a codon changes the amino acid encoded by that codon.&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br&gt;
+&lt;br&gt;
     
     </summary>
     
@@ -200,15 +223,15 @@
     <link href="https://geng-lee.github.io/posts/555c5d02/"/>
     <id>https://geng-lee.github.io/posts/555c5d02/</id>
     <published>2020-06-18T15:01:25.000Z</published>
-    <updated>2020-07-31T05:30:10.189Z</updated>
+    <updated>2020-07-31T05:30:10.000Z</updated>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;实战目的&quot;&gt;实战目的&lt;/h2&gt;
+      &lt;h2 id=&quot;实战目的&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#实战目的&quot;&gt;&lt;/a&gt; 实战目的&lt;/h2&gt;
 &lt;hr /&gt;
 &lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;Pkinase_maize_hmm.txt 是一个含有所需要提取蛋白名称（target name）的 txt 文件，Zea_mays.B73_RefGen_v4.pep.all.fa 文件是一个含有玉米基因组所有蛋白序列信息的 fa 文件，目的就是从 fa 文件提取我们所需蛋白名称的序列。&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br&gt;
+&lt;br&gt;
     
     </summary>
     
@@ -225,15 +248,15 @@
     <link href="https://geng-lee.github.io/posts/ac829b5/"/>
     <id>https://geng-lee.github.io/posts/ac829b5/</id>
     <published>2020-06-17T04:07:43.000Z</published>
-    <updated>2020-07-09T14:02:00.285Z</updated>
+    <updated>2020-07-09T14:02:00.000Z</updated>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;snapatac简介&quot;&gt;SnapATAC简介&lt;/h2&gt;
+      &lt;h2 id=&quot;snapatac简介&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#snapatac简介&quot;&gt;&lt;/a&gt; SnapATAC简介&lt;/h2&gt;
 &lt;hr /&gt;
 &lt;div class=&quot;note info no-icon&quot;&gt;&lt;p&gt;&lt;strong&gt;SnapATAC&lt;/strong&gt; (Single Nucleus Analysis Pipeline for ATAC-seq) 是一个能够快速、准确和全面分析单细胞ATAC-seq数据的R包，它可以对单细胞ATAC-seq数据进行常规的数据降维、聚类和批次校正分析，鉴定远端调控元件并预测其调控的靶基因，调用chromVAR软件进行motif分析，同时还可以将scRNA-seq和scATAC-seq数据进行整合分析等。&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;br&gt;
     
     </summary>
     
@@ -255,14 +278,12 @@
     <title>Hi Guys</title>
     <link href="https://geng-lee.github.io/posts/4a17b156/"/>
     <id>https://geng-lee.github.io/posts/4a17b156/</id>
-    <published>2020-06-16T14:12:55.826Z</published>
-    <updated>2020-08-02T14:48:40.751Z</updated>
+    <published>2020-06-16T14:12:55.000Z</published>
+    <updated>2020-08-02T14:48:40.000Z</updated>
     
     <summary type="html">
     
-      &lt;center&gt;
-&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;
-&lt;/center&gt;
+      &lt;center&gt;&lt;font size=6&gt;Welcome to My Blog! &lt;/font&gt;&lt;/center&gt;
 &lt;hr /&gt;
     
     </summary>
